@@ -37,12 +37,19 @@ export default class Ratings extends Component {
   }
 
   render() {
-    const { type, eventHandler, storeLink, noOfDays } = this.props
+    const { type, eventHandler, storeLink, noOfDays, thanksScreenTimeout } = this.props
     const { showRatingComponent } = this.state
     return (
       <View>
         {showRatingComponent && type !== 0 && (
-          <RatingComponent dismiss={this.dismissRatingCard} type={type} eventHandler={eventHandler} storeLink={storeLink} noOfDays={noOfDays}/>
+          <RatingComponent
+            dismiss={this.dismissRatingCard}
+            type={type}
+            eventHandler={eventHandler}
+            storeLink={storeLink}
+            noOfDays={noOfDays}
+            timeout={thanksScreenTimeout}
+          />
         )}
       </View>
     )

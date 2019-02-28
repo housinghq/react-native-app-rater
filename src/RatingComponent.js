@@ -154,7 +154,8 @@ export default class RatingComponent extends Component {
   closeThankYouScreen = () => this.setState({ thanksVisible: false }, this.props.dismiss)
 
   startTimer = () => {
-    this.timer = setTimeout(this.closeThankYouScreen, 1000)
+    const { timeout } = this.props
+    this.timer = setTimeout(this.closeThankYouScreen, timeout)
   }
 
   showButton = () =>
@@ -262,11 +263,13 @@ export default class RatingComponent extends Component {
 
 RatingComponent.defaultProps = {
   type: 0,
+  timeout: 1000,
   eventHandler: () => {}
 }
 
 RatingComponent.propTypes = {
   dismiss: PropTypes.func.isRequired,
   type: PropTypes.number,
+  timeout: PropTypes.number,
   eventHandler: PropTypes.func
 }
