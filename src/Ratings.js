@@ -6,6 +6,7 @@ import React, { Component } from 'react'
 import { View, AsyncStorage } from 'react-native'
 import PropTypes from 'prop-types'
 import RatingComponent from './RatingComponent'
+import { msPerDay } from './utils'
 
 export default class Ratings extends Component {
   constructor(props) {
@@ -23,7 +24,7 @@ export default class Ratings extends Component {
     if (showDate) {
       const { nextTime, neverShow, previouslyShown } = JSON.parse(showDate)
       if (!neverShow && previouslyShown) {
-        const currentTime = new Date().getTime() / 1000
+        const currentTime = new Date().getTime() / msPerDay
         if (currentTime >= nextTime) {
           this.setState({ showRatingComponent: true })
         }
@@ -36,12 +37,12 @@ export default class Ratings extends Component {
   }
 
   render() {
-    const { type } = this.props
+    const { type, eventHandler, storeLink, noOfDays } = this.props
     const { showRatingComponent } = this.state
     return (
       <View>
         {showRatingComponent && type !== 0 && (
-          <RatingComponent dismiss={this.dismissRatingCard} type={type} />
+          <RatingComponent dismiss={this.dismissRatingCard} type={type} eventHandler={eventHandler} storeLink={storeLink} noOfDays={noOfDays}/>
         )}
       </View>
     )
@@ -49,9 +50,11 @@ export default class Ratings extends Component {
 }
 
 Ratings.defaultProps = {
-  type: 0
+  type: 0,
+  eventHandler: () => {}
 }
 
 Ratings.propTypes = {
-  type: PropTypes.number
+  type: PropTypes.number,
+  eventHandler: PropTypes.func
 }

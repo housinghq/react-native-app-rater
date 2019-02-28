@@ -13,12 +13,7 @@ import {
 import PropTypes from 'prop-types'
 import Emojis from './EmojiView'
 import Stars from './StarView'
-import { setAlpha, setShowDate } from './utils'
-
-const storeLink = Platform.select({
-  ios: 'itms-apps://itunes.apple.com/in/app/apple-store/id967257660?mt=8',
-  android: 'https://play.google.com/store/apps/details?id=com.locon.housing'
-})
+import getRatingType, { setAlpha, setShowDate } from './utils'
 
 const KeyBoardAvoidView = Platform.OS === 'ios' ? KeyboardAvoidingView : View
 
@@ -41,8 +36,8 @@ const styles = StyleSheet.create({
   thanksView: {
     marginBottom: '50%',
     marginTop: '50%',
-    marginLeft: '10%',
-    marginRight: '10%',
+    marginLeft: 35,
+    marginRight: 35,
     height: 120,
     width: 260,
     backgroundColor: '#ffffff',
@@ -101,12 +96,17 @@ export default class RatingComponent extends Component {
       thanksVisible: false,
       showButton: false,
       showInputText: false,
-      rating: 1
+      rating: 1,
+      feedback: ''
     }
   }
 
+  componentDidMount(){
+    this.props.eventHandler({ type: 'ratings' })
+  }
+
   onClose = (later = false, rate = false) => {
-    const { dismiss } = this.props
+    const { dismiss, storeLink, noOfDays } = this.props
     let rating = 0
     if (later === false) {
       // eslint-disable-next-line prefer-destructuring
@@ -121,21 +121,40 @@ export default class RatingComponent extends Component {
         err => console.log(err)
       )
     }
-    setShowDate(rating)
+    setShowDate(rating, noOfDays)
     if (later === true) {
       clearTimeout(this.timer)
       this.setState({ rateVisible: false, thanksVisible: false }, dismiss)
+      this.onRemindLater()
     } else {
       this.setState({ rateVisible: false, thanksVisible: true }, this.startTimer)
+      this.onSubmit()
     }
   }
 
-  setRating = rating => this.setState({ rating })
+  setRating = rating => {
+    const ratingType = getRatingType(rating)
+    this.setState({ rating }, () => this.props.eventHandler({ type: 'click', ratingType }))
+  }
+
+  onType = (text) => {
+    this.setState({ feedback: text }, () => this.props.eventHandler({ type: 'write' }))
+  }
+
+  onSubmit = () => {
+    const { feedback, rating } = this.state
+    const ratingType =  getRatingType(rating)
+    this.props.eventHandler({ type: 'submit', ratingType, feedback })
+  }
+
+  onRemindLater = () => {
+    this.props.eventHandler({ type: 'later' })
+  }
 
   closeThankYouScreen = () => this.setState({ thanksVisible: false }, this.props.dismiss)
 
   startTimer = () => {
-    this.timer = setTimeout(this.closeThankYouScreen, 5000)
+    this.timer = setTimeout(this.closeThankYouScreen, 1000)
   }
 
   showButton = () =>
@@ -202,7 +221,7 @@ export default class RatingComponent extends Component {
                 )}
                 {showInputText && (
                   <View style={{ width: '100%', alignSelf: 'flex-start' }}>
-                    <TextInput style={styles.input} placeholder="Type your feedback here" />
+                    <TextInput style={styles.input} onChangeText={this.onType} placeholder="Type your feedback here" />
                     {Platform.OS === 'ios' && (
                       <View
                         style={[
@@ -242,10 +261,12 @@ export default class RatingComponent extends Component {
 }
 
 RatingComponent.defaultProps = {
-  type: 0
+  type: 0,
+  eventHandler: () => {}
 }
 
 RatingComponent.propTypes = {
   dismiss: PropTypes.func.isRequired,
-  type: PropTypes.number
+  type: PropTypes.number,
+  eventHandler: PropTypes.func
 }

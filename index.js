@@ -1,3 +1,3 @@
-import Ratings from 'Ratings'
+import Ratings from './src/Ratings'
 
 export default Ratings;
