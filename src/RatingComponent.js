@@ -125,7 +125,9 @@ export default class RatingComponent extends Component {
     if (later === true) {
       clearTimeout(this.timer)
       this.setState({ rateVisible: false, thanksVisible: false }, dismiss)
-      this.onRemindLater()
+      if(!this.state.thanksVisible) {
+        this.onRemindLater()
+      }
     } else {
       this.setState({ rateVisible: false, thanksVisible: true }, this.startTimer)
       this.onSubmit()
@@ -137,8 +139,8 @@ export default class RatingComponent extends Component {
     this.setState({ rating }, () => this.props.eventHandler({ type: 'click', ratingType }))
   }
 
-  onType = (text) => {
-    this.setState({ feedback: text }, () => this.props.eventHandler({ type: 'write' }))
+  onChangeText = (text) => {
+    this.setState({ feedback: text })
   }
 
   onSubmit = () => {
@@ -222,7 +224,12 @@ export default class RatingComponent extends Component {
                 )}
                 {showInputText && (
                   <View style={{ width: '100%', alignSelf: 'flex-start' }}>
-                    <TextInput style={styles.input} onChangeText={this.onType} placeholder="Type your feedback here" />
+                    <TextInput
+                      style={styles.input}
+                      onFocus={() => this.props.eventHandler({ type: 'write' })}
+                      onChangeText={this.onChangeText}
+                      placeholder="Type your feedback here"
+                    />
                     {Platform.OS === 'ios' && (
                       <View
                         style={[
@@ -264,6 +271,7 @@ export default class RatingComponent extends Component {
 RatingComponent.defaultProps = {
   type: 0,
   timeout: 1000,
+  noOfDays: 7,
   eventHandler: () => {}
 }
 
@@ -271,5 +279,6 @@ RatingComponent.propTypes = {
   dismiss: PropTypes.func.isRequired,
   type: PropTypes.number,
   timeout: PropTypes.number,
+  noOfDays: PropTypes.number,
   eventHandler: PropTypes.func
 }

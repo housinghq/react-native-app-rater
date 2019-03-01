@@ -14,9 +14,12 @@ export default class Ratings extends Component {
     this.state = { showRatingComponent: false }
   }
 
-  showRatingComponent = () => this.shouldShow()
+  componentDidMount() {
+    this.shouldShow()
+  }
+
   dismissRatingCard = () => {
-    this.setState({ showRatingComponent: false })
+    this.setState({ showRatingComponent: false }, this.props.onDismiss)
   }
 
   async shouldShow() {
@@ -58,10 +61,16 @@ export default class Ratings extends Component {
 
 Ratings.defaultProps = {
   type: 0,
-  eventHandler: () => {}
+  eventHandler: () => {},
+  noOfDays: 7,
+  timeout: 1000,
+  onDismiss: () => {}
 }
 
 Ratings.propTypes = {
   type: PropTypes.number,
-  eventHandler: PropTypes.func
+  timeout: PropTypes.number,
+  noOfDays: PropTypes.number,
+  eventHandler: PropTypes.func,
+  onDismiss: PropTypes.func
 }
