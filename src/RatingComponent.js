@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import getRatingType, { setAlpha, setShowDate } from './utils'
-import RatingsCard from './RatingsCard';
+import RatingsDisplay from './RatingsDisplay';
 
 const KeyBoardAvoidView = Platform.OS === 'ios' ? KeyboardAvoidingView : View
 
@@ -197,7 +197,7 @@ export default class RatingComponent extends Component {
               >
                 <Text style={styles.title}>Rate our App</Text>
                 <Text style={styles.subtext}>We’d love to hear from you</Text>
-                <RatingsCard
+                <RatingsDisplay
                   showButton={this.showButton}
                   showInput={this.showInput}
                   setRating={this.setRating}
