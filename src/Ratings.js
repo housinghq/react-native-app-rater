@@ -22,21 +22,19 @@ export default class Ratings extends Component {
   async shouldShow(shouldAlwaysShow) {
     const { onDismiss, type } = this.props
     if( type === 0 ) {
-      this.dismissRatingCard()
+      onDismiss()
       return
     }
     const showDate = await AsyncStorage.getItem('SHOW_DATE')
-    if ( !shouldAlwaysShow && showDate) {
+    if ( shouldAlwaysShow === false && showDate) {
       const { nextTime, neverShow } = JSON.parse(showDate)
-      if (!neverShow) {
+      if (neverShow === false) {
         const currentTime = getCurrentTime()
         if (currentTime >= nextTime) {
           this.setState({ showRatingComponent: true })
         } else {
           onDismiss()
         }
-      } else if (!neverShow) {
-        this.setState({ showRatingComponent: true })
       } else {
         onDismiss()
       }

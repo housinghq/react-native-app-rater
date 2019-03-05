@@ -1,7 +1,7 @@
 import R from 'ramda'
 import { AsyncStorage } from 'react-native'
 
-const msPerDay = 24*60*60*100
+const msPerDay = 24*60*60*1000
 export const imageLabels = ['Awful', 'Poor', 'Average', 'Good', 'Great']
 
 export const emojiSrc = [
