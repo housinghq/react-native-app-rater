@@ -51,7 +51,7 @@ export function setShowDate(ratings = 0, noOfDays) {
   const today = getCurrentTime()
   const nextTime = today + noOfDays
   const neverShow = ratings === 5
-  const showDate = { nextTime, neverShow, previouslyShown: true }
+  const showDate = { nextTime, neverShow }
   AsyncStorage.setItem('SHOW_DATE', JSON.stringify(showDate))
 }
 

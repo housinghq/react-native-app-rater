@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Image, FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import PropTypes from 'prop-types'
 import { imageLabels, emojiSrc, star } from './utils'
 
@@ -36,9 +36,6 @@ export default class RatingsCard extends Component {
   constructor(props) {
     super(props)
     const { data, opacity } = this.getIcons(props.type)
-    for (let i = 1; i <= 5; i += 1) {
-      data.push(star.unselected)
-    }
     this.state = {
       data,
       opacity
@@ -68,7 +65,7 @@ export default class RatingsCard extends Component {
       }
     } else {
       for (let i = 0; i <= 4; i += 1) {
-        data[i] = (i === index) ? emojiSrc.selected : emojiSrc.unselected
+        data[i] = (i === index) ? emojiSrc[i].selected : emojiSrc[i].unselected
         opacity[i] = (i === index) ? 1 : defaultOpacity
       }
     }
@@ -94,7 +91,7 @@ export default class RatingsCard extends Component {
             <Image style={styles.starThumbnail} source={item} />
           )}
           { type === 2 && (
-            <Image style={styles.emojicon} opacity={opacity[index]} source={item} />
+            <Image style={styles.emojiThumbnail} opacity={opacity[index]} source={item} />
           )}
         </TouchableOpacity>
         { type === 2 && (

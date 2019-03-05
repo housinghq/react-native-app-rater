@@ -20,15 +20,15 @@ export default class Ratings extends Component {
   }
 
   async shouldShow(shouldAlwaysShow) {
-    const { onDismiss } = this.props
+    const { onDismiss, type } = this.props
     if( type === 0 ) {
       this.dismissRatingCard()
       return
     }
     const showDate = await AsyncStorage.getItem('SHOW_DATE')
     if ( !shouldAlwaysShow && showDate) {
-      const { nextTime, neverShow, previouslyShown } = JSON.parse(showDate)
-      if (!neverShow && previouslyShown) {
+      const { nextTime, neverShow } = JSON.parse(showDate)
+      if (!neverShow) {
         const currentTime = getCurrentTime()
         if (currentTime >= nextTime) {
           this.setState({ showRatingComponent: true })

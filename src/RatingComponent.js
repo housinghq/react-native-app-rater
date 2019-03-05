@@ -191,7 +191,7 @@ export default class RatingComponent extends Component {
         >
           {rateVisible && (
             <KeyBoardAvoidView behavior="padding">
-              <View
+              <TouchableOpacity
                 activeOpacity={1}
                 style={{ backgroundColor: 'white', width: '100%', alignItems: 'center' }}
               >
@@ -240,7 +240,7 @@ export default class RatingComponent extends Component {
                 <TouchableOpacity style={{ marginTop: 16 }} onPress={() => this.onClose(true)}>
                   <Text style={styles.later}>Remind me Later</Text>
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </KeyBoardAvoidView>
           )}
           {thanksVisible && (
