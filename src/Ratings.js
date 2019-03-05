@@ -1,7 +1,3 @@
-/**
- * @providesModule Ratings
- */
-
 import React, { Component } from 'react'
 import { View, AsyncStorage } from 'react-native'
 import PropTypes from 'prop-types'
