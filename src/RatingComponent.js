@@ -11,9 +11,8 @@ import {
   KeyboardAvoidingView
 } from 'react-native'
 import PropTypes from 'prop-types'
-import Emojis from './EmojiView'
-import Stars from './StarView'
 import getRatingType, { setAlpha, setShowDate } from './utils'
+import RatingsCard from './RatingsCard';
 
 const KeyBoardAvoidView = Platform.OS === 'ios' ? KeyboardAvoidingView : View
 
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   input: {
-    width: '100%' - 16,
+    width: '100%'-  32,
     marginLeft: 16,
     marginRight: 16
   }
@@ -102,17 +101,17 @@ export default class RatingComponent extends Component {
   }
 
   componentDidMount(){
-    this.props.eventHandler({ type: 'ratings' })
+    this.props.sendEvent({ type: 'ratings' })
   }
 
-  onClose = (later = false, rate = false) => {
+  onClose = (later = false, maxRatings = false) => {
     const { dismiss, storeLink, noOfDays } = this.props
     let rating = 0
     if (later === false) {
       // eslint-disable-next-line prefer-destructuring
       rating = this.state.rating
     }
-    if (rate === true) {
+    if (maxRatings === true) {
       Linking.canOpenURL(storeLink).then(
         (supported) => {
           // eslint-disable-next-line no-unused-expressions
@@ -136,7 +135,7 @@ export default class RatingComponent extends Component {
 
   setRating = rating => {
     const ratingType = getRatingType(rating)
-    this.setState({ rating }, () => this.props.eventHandler({ type: 'click', ratingType }))
+    this.setState({ rating }, () => this.props.sendEvent({ type: 'click', ratingType }))
   }
 
   onChangeText = (text) => {
@@ -146,11 +145,11 @@ export default class RatingComponent extends Component {
   onSubmit = () => {
     const { feedback, rating } = this.state
     const ratingType =  getRatingType(rating)
-    this.props.eventHandler({ type: 'submit', ratingType, feedback })
+    this.props.sendEvent({ type: 'submit', ratingType, feedback })
   }
 
   onRemindLater = () => {
-    this.props.eventHandler({ type: 'later' })
+    this.props.sendEvent({ type: 'later' })
   }
 
   closeThankYouScreen = () => this.setState({ thanksVisible: false }, this.props.dismiss)
@@ -192,26 +191,18 @@ export default class RatingComponent extends Component {
         >
           {rateVisible && (
             <KeyBoardAvoidView behavior="padding">
-              <TouchableOpacity
+              <View
                 activeOpacity={1}
                 style={{ backgroundColor: 'white', width: '100%', alignItems: 'center' }}
               >
                 <Text style={styles.title}>Rate our App</Text>
                 <Text style={styles.subtext}>We’d love to hear from you</Text>
-                {type === 1 && (
-                  <Stars
-                    showButton={this.showButton}
-                    showInput={this.showInput}
-                    setRating={this.setRating}
-                  />
-                )}
-                {type === 2 && (
-                  <Emojis
-                    showButton={this.showButton}
-                    showInput={this.showInput}
-                    setRating={this.setRating}
-                  />
-                )}
+                <RatingsCard
+                  showButton={this.showButton}
+                  showInput={this.showInput}
+                  setRating={this.setRating}
+                  type={type}
+                />
                 {showButton && (
                   <View>
                     <TouchableOpacity
@@ -226,7 +217,7 @@ export default class RatingComponent extends Component {
                   <View style={{ width: '100%', alignSelf: 'flex-start' }}>
                     <TextInput
                       style={styles.input}
-                      onFocus={() => this.props.eventHandler({ type: 'write' })}
+                      onFocus={() => this.props.sendEvent({ type: 'write' })}   //TODO: to be discussed with PM
                       onChangeText={this.onChangeText}
                       placeholder="Type your feedback here"
                     />
@@ -249,7 +240,7 @@ export default class RatingComponent extends Component {
                 <TouchableOpacity style={{ marginTop: 16 }} onPress={() => this.onClose(true)}>
                   <Text style={styles.later}>Remind me Later</Text>
                 </TouchableOpacity>
-              </TouchableOpacity>
+              </View>
             </KeyBoardAvoidView>
           )}
           {thanksVisible && (
@@ -271,8 +262,8 @@ export default class RatingComponent extends Component {
 RatingComponent.defaultProps = {
   type: 0,
   timeout: 1000,
-  noOfDays: 7,
-  eventHandler: () => {}
+  noOfDays: 90,
+  sendEvent: () => {}
 }
 
 RatingComponent.propTypes = {
@@ -280,5 +271,5 @@ RatingComponent.propTypes = {
   type: PropTypes.number,
   timeout: PropTypes.number,
   noOfDays: PropTypes.number,
-  eventHandler: PropTypes.func
+  sendEvent: PropTypes.func
 }

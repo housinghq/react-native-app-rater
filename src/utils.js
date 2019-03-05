@@ -1,35 +1,35 @@
 import R from 'ramda'
 import { AsyncStorage } from 'react-native'
 
-export const msPerDay = 24*60*60*100
+const msPerDay = 24*60*60*100
 export const imageLabels = ['Awful', 'Poor', 'Average', 'Good', 'Great']
 
 export const emojiSrc = [
   {
-    simple: require('../assets/Emojis/Simple/Awful.png'),
-    color: require('../assets/Emojis/Color/Awful.png')
+    unselected: require('../assets/Emojis/Simple/Awful.png'),
+    selected: require('../assets/Emojis/Color/Awful.png')
   },
   {
-    simple: require('../assets/Emojis/Simple/Poor.png'),
-    color: require('../assets/Emojis/Color/Poor.png')
+    unselected: require('../assets/Emojis/Simple/Poor.png'),
+    selected: require('../assets/Emojis/Color/Poor.png')
   },
   {
-    simple: require('../assets/Emojis/Simple/Average.png'),
-    color: require('../assets/Emojis/Color/Average.png')
+    unselected: require('../assets/Emojis/Simple/Average.png'),
+    selected: require('../assets/Emojis/Color/Average.png')
   },
   {
-    simple: require('../assets/Emojis/Simple/Good.png'),
-    color: require('../assets/Emojis/Color/Good.png')
+    unselected: require('../assets/Emojis/Simple/Good.png'),
+    selected: require('../assets/Emojis/Color/Good.png')
   },
   {
-    simple: require('../assets/Emojis/Simple/Great.png'),
-    color: require('../assets/Emojis/Color/Great.png')
+    unselected: require('../assets/Emojis/Simple/Great.png'),
+    selected: require('../assets/Emojis/Color/Great.png')
   }
 ]
 
 export const star = {
-  simple: require('../assets/Stars/simple.png'),
-  color: require('../assets/Stars/color.png')
+  unselected: require('../assets/Stars/simple.png'),
+  selected: require('../assets/Stars/color.png')
 }
 
 export function setAlpha(color, alpha) {
@@ -43,8 +43,12 @@ export function setAlpha(color, alpha) {
   return color.substring(0, 7) + alphaValue // Format: #rrggbbaa
 }
 
+export function getCurrentTime() {
+  return (new Date().getTime() / msPerDay)
+}
+
 export function setShowDate(ratings = 0, noOfDays) {
-  const today = new Date().getTime() / msPerDay
+  const today = getCurrentTime()
   const nextTime = today + noOfDays
   const neverShow = ratings === 5
   const showDate = { nextTime, neverShow, previouslyShown: true }

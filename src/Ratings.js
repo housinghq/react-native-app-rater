@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, AsyncStorage } from 'react-native'
 import PropTypes from 'prop-types'
 import RatingComponent from './RatingComponent'
-import { msPerDay } from './utils'
+import { getCurrentTime } from './utils'
 
 export default class Ratings extends Component {
   constructor(props) {
@@ -11,21 +11,25 @@ export default class Ratings extends Component {
   }
 
   componentDidMount() {
-    const { applyCheck } = this.props
-    this.shouldShow(applyCheck)
+    const { shouldAlwaysShow } = this.props
+    this.shouldShow(shouldAlwaysShow)
   }
 
   dismissRatingCard = () => {
     this.setState({ showRatingComponent: false }, this.props.onDismiss)
   }
 
-  async shouldShow(applyCheck) {
-    const showDate = await AsyncStorage.getItem('SHOW_DATE')
+  async shouldShow(shouldAlwaysShow) {
     const { onDismiss } = this.props
-    if (applyCheck && showDate) {
+    if( type === 0 ) {
+      this.dismissRatingCard()
+      return
+    }
+    const showDate = await AsyncStorage.getItem('SHOW_DATE')
+    if ( !shouldAlwaysShow && showDate) {
       const { nextTime, neverShow, previouslyShown } = JSON.parse(showDate)
       if (!neverShow && previouslyShown) {
-        const currentTime = new Date().getTime() / msPerDay
+        const currentTime = getCurrentTime()
         if (currentTime >= nextTime) {
           this.setState({ showRatingComponent: true })
         } else {
@@ -42,7 +46,7 @@ export default class Ratings extends Component {
   }
 
   render() {
-    const { type, eventHandler, storeLink, noOfDays, thanksScreenTimeout } = this.props
+    const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout } = this.props
     const { showRatingComponent } = this.state
     return (
       <View>
@@ -50,7 +54,7 @@ export default class Ratings extends Component {
           <RatingComponent
             dismiss={this.dismissRatingCard}
             type={type}
-            eventHandler={eventHandler}
+            sendEvent={sendEvent}
             storeLink={storeLink}
             noOfDays={noOfDays}
             timeout={thanksScreenTimeout}
@@ -63,18 +67,18 @@ export default class Ratings extends Component {
 
 Ratings.defaultProps = {
   type: 0,
-  eventHandler: () => {},
-  noOfDays: 7,
-  timeout: 1000,
+  sendEvent: () => {},
+  noOfDays: 90,
+  thanksScreenTimeout: 3000,
   onDismiss: () => {},
-  applyCheck: true
+  shouldAlwaysShow: false
 }
 
 Ratings.propTypes = {
   type: PropTypes.number,
-  timeout: PropTypes.number,
+  thanksScreenTimeout: PropTypes.number,
   noOfDays: PropTypes.number,
-  eventHandler: PropTypes.func,
+  sendEvent: PropTypes.func,
   onDismiss: PropTypes.func,
-  applyCheck: PropTypes.bool,
+  shouldAlwaysShow: PropTypes.bool,
 }
