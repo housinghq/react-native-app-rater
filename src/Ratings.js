@@ -15,24 +15,30 @@ export default class Ratings extends Component {
   }
 
   componentDidMount() {
-    this.shouldShow()
+    const { applyCheck } = this.props
+    this.shouldShow(applyCheck)
   }
 
   dismissRatingCard = () => {
     this.setState({ showRatingComponent: false }, this.props.onDismiss)
   }
 
-  async shouldShow() {
+  async shouldShow(applyCheck) {
     const showDate = await AsyncStorage.getItem('SHOW_DATE')
-    if (showDate) {
+    const { onDismiss } = this.props
+    if (applyCheck && showDate) {
       const { nextTime, neverShow, previouslyShown } = JSON.parse(showDate)
       if (!neverShow && previouslyShown) {
         const currentTime = new Date().getTime() / msPerDay
         if (currentTime >= nextTime) {
           this.setState({ showRatingComponent: true })
+        } else {
+          onDismiss()
         }
       } else if (!neverShow) {
         this.setState({ showRatingComponent: true })
+      } else {
+        onDismiss()
       }
     } else {
       this.setState({ showRatingComponent: true })
@@ -64,7 +70,8 @@ Ratings.defaultProps = {
   eventHandler: () => {},
   noOfDays: 7,
   timeout: 1000,
-  onDismiss: () => {}
+  onDismiss: () => {},
+  applyCheck: true
 }
 
 Ratings.propTypes = {
@@ -72,5 +79,6 @@ Ratings.propTypes = {
   timeout: PropTypes.number,
   noOfDays: PropTypes.number,
   eventHandler: PropTypes.func,
-  onDismiss: PropTypes.func
+  onDismiss: PropTypes.func,
+  applyCheck: PropTypes.bool,
 }
