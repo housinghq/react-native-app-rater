@@ -43,8 +43,8 @@ export default class RatingsCard extends Component {
   }
 
   getIcons(type) {
-    const data = []
-    const opacity = []
+    let data = []
+    let opacity = []
     if (type === 1) {
       for (let i = 1; i <= 5; i += 1) {
         data.push(star.unselected)
