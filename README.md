@@ -63,6 +63,7 @@ export class RateApp extends Component {
 ```
 ## Props and Usage
 Prop | Description | Type | Default
+------ | ------ | ------ | ------
  **`type`** | Rating Type: either `0`, `1` or `2` - 0 - Not Displayed, 1 - Ratings with Stars, 2 - Ratings with Emojis | number | 0
  **`noOfDays`** | Show Ratings next after 'noOfDays' Days | number | 90
  **`onDismiss`** | A function called when Ratings is closed or not displayed (as Days Passed < noOfDays or type is 0) | function | (none)
