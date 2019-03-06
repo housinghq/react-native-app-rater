@@ -1,5 +1,5 @@
 
-# react-native-rate-app
+# react-native-app-rater
 
 ## Getting started
 
@@ -70,4 +70,3 @@ Prop | Description | Type | Default
  **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`
  **`thanksScreenTimeout`** | timeout (in ms) after which the ThankYouView will be closed (automatically) | number | 3000 (3s)
  **`sendEvent`** | function to handle GA-Events Call | function | (none)
-  
