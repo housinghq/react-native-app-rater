@@ -11,22 +11,21 @@ export default class Ratings extends Component {
   }
 
   componentDidMount() {
-    const { shouldAlwaysShow } = this.props
-    this.shouldShow(shouldAlwaysShow)
+    this.shouldShow()
   }
 
   dismissRatingCard = () => {
     this.setState({ showRatingComponent: false }, this.props.onDismiss)
   }
 
-  async shouldShow(shouldAlwaysShow) {
+  async shouldShow() {
     const { onDismiss, type } = this.props
     if( type === 0 ) {
       onDismiss()
       return
     }
     const showDate = await AsyncStorage.getItem('SHOW_DATE')
-    if ( shouldAlwaysShow === false && showDate) {
+    if (showDate) {
       const { nextTime, neverShow } = JSON.parse(showDate)
       if (neverShow === false) {
         const currentTime = getCurrentTime()
@@ -68,8 +67,7 @@ Ratings.defaultProps = {
   sendEvent: () => {},
   noOfDays: 90,
   thanksScreenTimeout: 3000,
-  onDismiss: () => {},
-  shouldAlwaysShow: false
+  onDismiss: () => {}
 }
 
 Ratings.propTypes = {
@@ -77,6 +75,5 @@ Ratings.propTypes = {
   thanksScreenTimeout: PropTypes.number,
   noOfDays: PropTypes.number,
   sendEvent: PropTypes.func,
-  onDismiss: PropTypes.func,
-  shouldAlwaysShow: PropTypes.bool,
+  onDismiss: PropTypes.func
 }

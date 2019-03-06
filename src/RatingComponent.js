@@ -217,7 +217,6 @@ export default class RatingComponent extends Component {
                   <View style={{ width: '100%', alignSelf: 'flex-start' }}>
                     <TextInput
                       style={styles.input}
-                      onFocus={() => this.props.sendEvent({ type: 'write' })}   //TODO: to be discussed with PM
                       onChangeText={this.onChangeText}
                       placeholder="Type your feedback here"
                     />
