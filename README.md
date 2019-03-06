@@ -51,19 +51,22 @@ const storeLink = Platform.select({	// To redirect users to the respective app s
   ios: 'App-Store-Link'
   android: 'Play-Store-Link'
 })
-<RNRateApp
-	type={1}
-	storeLink={storeLink}
-/>
+
+export class RateApp extends Component {
+  render() {
+		<RNRateApp
+			type={1}
+			storeLink={storeLink}
+		/>
+	}
+}
 ```
 ## Props and Usage
- - type : Values - 0,1 or 2
-	- 0 - Not Displayed
-	- 1 - Ratings with Stars
-	- 2 - Ratings with Emojis
- - noOfDays : Show Ratings next after 'noOfDays' Days (Default Value: 90 Days(3 months) )
- - onDismiss : A function called when Ratings is closed or not displayed (as Days < noOfDays or type is 0)
- - shouldAlwaysShow : When true the ratings will always be shown regardless of the noOfDays passed
- - thanksScreenTimeout : timeout (in ms) after which the ThankYouView will be closed (automatically)
- - sendEvent : function to handle GA-Events Call
+Prop | Description | Type | Default
+ **`type`** | Rating Type: either `0`, `1` or `2` - 0 - Not Displayed, 1 - Ratings with Stars, 2 - Ratings with Emojis | number | 0
+ **`noOfDays`** | Show Ratings next after 'noOfDays' Days | number | 90
+ **`onDismiss`** | A function called when Ratings is closed or not displayed (as Days Passed < noOfDays or type is 0) | function | (none)
+ **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`
+ - **`thanksScreenTimeout`** | timeout (in ms) after which the ThankYouView will be closed (automatically) | number | 3000 (3s)
+ - **`sendEvent`** | function to handle GA-Events Call | function | (none)
   
