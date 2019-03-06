@@ -68,6 +68,6 @@ Prop | Description | Type | Default
  **`noOfDays`** | Show Ratings next after 'noOfDays' Days | number | 90
  **`onDismiss`** | A function called when Ratings is closed or not displayed (as Days Passed < noOfDays or type is 0) | function | (none)
  **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`
- - **`thanksScreenTimeout`** | timeout (in ms) after which the ThankYouView will be closed (automatically) | number | 3000 (3s)
- - **`sendEvent`** | function to handle GA-Events Call | function | (none)
+ **`thanksScreenTimeout`** | timeout (in ms) after which the ThankYouView will be closed (automatically) | number | 3000 (3s)
+ **`sendEvent`** | function to handle GA-Events Call | function | (none)
   
