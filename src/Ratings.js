@@ -23,7 +23,7 @@ export default class Ratings extends Component {
     if (showDate) {
       const { nextTime, neverShow } = JSON.parse(showDate)
       if (neverShow === false) {
-        const currentTime = Date.now
+        const currentTime = Date.now()
         if (currentTime >= nextTime) {
           this.setState({ showRatingComponent: true })
         } else {

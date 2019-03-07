@@ -116,14 +116,14 @@ export default class RatingComponent extends Component {
   onSubmit = () => {
     const { feedback, rating } = this.state
     const ratingType =  getRatingType(rating)
-    this.props.sendEvent({ type: 'submit', ratingType, feedback })
+    this.props.sendEvent({ type: 'SUBMIT', ratingType, feedback })
   }
 
   onRemindLater = () => {
     const { sendEvent, dismiss } = this.props
     clearTimeout(this.timer)
     if(!this.state.thanksVisible) {
-      sendEvent({ type: 'later' })
+      sendEvent({ type: 'LATER' })
     }
     this.setState({ rateVisible: false, thanksVisible: false }, dismiss)
   }
@@ -174,7 +174,7 @@ export default class RatingComponent extends Component {
       buttonText = 'Submit'
     }
       return(
-        <TouchableOpacity style={[styles.button]} onPress={handleClick}>
+        <TouchableOpacity style={buttonStyle} onPress={handleClick}>
           <Text style={styles.buttonText}>{buttonText}</Text>
         </TouchableOpacity>
       )
@@ -199,7 +199,7 @@ export default class RatingComponent extends Component {
   )
 
   renderRatings = ({ type }) => (
-    <View>
+    <View style={{width: '100%'}}>
       <Text style={styles.title}>Rate our App</Text>
       <Text style={styles.subtext}>We’d love to hear from you</Text>
       <RatingsDisplay
@@ -234,7 +234,7 @@ export default class RatingComponent extends Component {
                 style={{ backgroundColor: 'white', width: '100%', alignItems: 'center' }}
               >
                 <RateView type={type} />
-                { (maxRatings === false) && (
+                { (maxRatings === false && rating > 0) && (
                   <InputText />
                 )}
                 { (rating > 0) && (
