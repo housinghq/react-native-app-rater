@@ -60,5 +60,4 @@ Prop | Description | Type | Default
  **`onDismiss`** | A function called when Ratings is closed or not displayed (as Days Passed < noOfDays or type is 0) | function | (none)
  **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`
  **`thanksScreenTimeout`** | timeout (in ms) after which the Thank You Screen will be closed (automatically) | number | 3000 (3s)
- **`sendEvent`** | function to handle GA-Events Call 
-  **params** : Object - `keys`: type (required), ratingsType (optional), feedback (optional)| function | (none)
+ **`sendEvent`** | function to handle GA-Events Call **params** : Object - `keys`: type (required), ratingsType (optional), feedback (optional)| function | (none)
