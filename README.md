@@ -3,11 +3,11 @@
 
 ## Getting started
 
-`$ npm install react-native-rate-app --save`
+`$ npm install react-native-app-rater --save`
 
 ### Mostly automatic installation
 
-`$ react-native link react-native-rate-app`
+`$ react-native link react-native-app-rater`
 
 ### Manual installation
 
@@ -15,7 +15,7 @@
 #### iOS
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-rate-app` and add `RNRateApp.xcodeproj`
+2. Go to `node_modules` ➜ `react-native-app-rater` and add `RNRateApp.xcodeproj`
 3. In XCode, in the project navigator, select your project. Add `libRNRateApp.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. Run your project (`Cmd+R`)<
 
@@ -26,26 +26,17 @@
   - Add `new RNRateAppPackage()` to the list returned by the `getPackages()` method
 2. Append the following lines to `android/settings.gradle`:
   	```
-  	include ':react-native-rate-app'
-  	project(':react-native-rate-app').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-rate-app/android')
+  	include ':react-native-app-rater'
+  	project(':react-native-app-rater').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-app-rater/android')
   	```
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
   	```
-      compile project(':react-native-rate-app')
+      compile project(':react-native-app-rater')
   	```
-
-#### Windows
-[Read it! :D](https://github.com/ReactWindows/react-native)
-
-1. In Visual Studio add the `RNRateApp.sln` in `node_modules/react-native-rate-app/windows/RNRateApp.sln` folder to their solution, reference from their app.
-2. Open up your `MainPage.cs` app
-  - Add `using Rate.App.RNRateApp;` to the usings at the top of the file
-  - Add `new RNRateAppPackage()` to the `List<IReactPackage>` returned by the `Packages` method
-
 
 ## Usage
 ```javascript
-import RNRateApp from 'react-native-rate-app';
+import RNRateApp from 'react-native-app-rater';
 
 const storeLink = Platform.select({	// To redirect users to the respective app store to rate app
   ios: 'App-Store-Link'
@@ -68,5 +59,6 @@ Prop | Description | Type | Default
  **`noOfDays`** | Show Ratings next after 'noOfDays' Days | number | 90
  **`onDismiss`** | A function called when Ratings is closed or not displayed (as Days Passed < noOfDays or type is 0) | function | (none)
  **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`
- **`thanksScreenTimeout`** | timeout (in ms) after which the ThankYouView will be closed (automatically) | number | 3000 (3s)
- **`sendEvent`** | function to handle GA-Events Call | function | (none)
+ **`thanksScreenTimeout`** | timeout (in ms) after which the Thank You Screen will be closed (automatically) | number | 3000 (3s)
+ **`sendEvent`** | function to handle GA-Events Call 
+  **params** : Object - `keys`: type (required), ratingsType (optional), feedback (optional)| function | (none)
