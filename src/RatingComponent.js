@@ -33,10 +33,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   thanksView: {
-    marginBottom: '50%',
-    marginTop: '50%',
-    marginLeft: 35,
-    marginRight: 35,
     height: 120,
     width: 265,
     backgroundColor: '#ffffff',
