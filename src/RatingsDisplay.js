@@ -57,22 +57,13 @@ export default class RatingsCard extends Component {
   }
 
   changeRatings = (index) => {
-    const { data, opacity } = this.state
-    const { showButton, showInput, setRating, type } = this.props
+    let { data, opacity } = this.state
+    const { setRating, type } = this.props
     if( type === 1 ) {
-      for (let i = 0; i <= 4; i += 1) {
-        data[i] = (i <= index) ? star.selected : star.unselected
-      }
+      data = data.map((_, i) => (i <= index) ? star.selected : star.unselected) 
     } else {
-      for (let i = 0; i <= 4; i += 1) {
-        data[i] = (i === index) ? emojiSrc[i].selected : emojiSrc[i].unselected
-        opacity[i] = (i === index) ? 1 : defaultOpacity
-      }
-    }
-    if (index === 4) {
-      showButton()
-    } else {
-      showInput()
+        data = data.map((_, i) => (i === index) ? emojiSrc[i].selected : emojiSrc[i].unselected)
+        opacity = opacity.map((_, i) => (i === index) ? 1 : defaultOpacity )
     }
     setRating(index + 1)
     this.setState({
@@ -103,11 +94,11 @@ export default class RatingsCard extends Component {
 
   render() {
     return (
-      <View style={{ width: '100%', marginTop: 16, zIndex: 0, marginBottom: 16 }}>
+      <View style={{ width: '100%', marginTop: 16, marginBottom: 16 }}>
         <FlatList
           data={this.state.data}
           scrollEnabled={false}
-          contentContainerStyle={[styles.flatlistContainer, { zIndex: 1 }]}
+          contentContainerStyle={[styles.flatlistContainer]}
           keyExtractor={(item, index) => index.toString()}
           renderItem={this.renderItem}
         />
@@ -117,8 +108,6 @@ export default class RatingsCard extends Component {
 }
 
 RatingsCard.propTypes = {
-  showButton: PropTypes.func.isRequired,
-  showInput: PropTypes.func.isRequired,
   setRating: PropTypes.func.isRequired,
   type: PropTypes.number.isRequired
 }

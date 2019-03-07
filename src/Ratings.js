@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { View, AsyncStorage } from 'react-native'
 import PropTypes from 'prop-types'
 import RatingComponent from './RatingComponent'
-import { getCurrentTime } from './utils'
 
 export default class Ratings extends Component {
   constructor(props) {
@@ -19,16 +18,12 @@ export default class Ratings extends Component {
   }
 
   async shouldShow() {
-    const { onDismiss, type } = this.props
-    if( type === 0 ) {
-      onDismiss()
-      return
-    }
+    const { onDismiss } = this.props
     const showDate = await AsyncStorage.getItem('SHOW_DATE')
     if (showDate) {
       const { nextTime, neverShow } = JSON.parse(showDate)
       if (neverShow === false) {
-        const currentTime = getCurrentTime()
+        const currentTime = Date.now
         if (currentTime >= nextTime) {
           this.setState({ showRatingComponent: true })
         } else {
@@ -45,20 +40,19 @@ export default class Ratings extends Component {
   render() {
     const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout } = this.props
     const { showRatingComponent } = this.state
-    return (
-      <View>
-        {showRatingComponent && type !== 0 && (
-          <RatingComponent
-            dismiss={this.dismissRatingCard}
-            type={type}
-            sendEvent={sendEvent}
-            storeLink={storeLink}
-            noOfDays={noOfDays}
-            timeout={thanksScreenTimeout}
-          />
-        )}
-      </View>
-    )
+    if(showRatingComponent === true) {
+      return (
+        <RatingComponent
+          dismiss={this.dismissRatingCard}
+          type={type}
+          sendEvent={sendEvent}
+          storeLink={storeLink}
+          noOfDays={noOfDays}
+          timeout={thanksScreenTimeout}
+        />
+      )
+    }
+    return null
   }
 }
 

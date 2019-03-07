@@ -84,59 +84,34 @@ const styles = StyleSheet.create({
 })
 
 export default class RatingComponent extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      rateVisible: true,
-      thanksVisible: false,
-      showButton: false,
-      showInputText: false,
-      rating: 1,
-      feedback: ''
-    }
+  
+  state = {
+    rateVisible: true,
+    thanksVisible: false,
+    rating: 0,
+    feedback: ''
   }
 
   componentDidMount(){
-    this.props.sendEvent({ type: 'ratings' })
+    this.props.sendEvent({ type: 'RATINGS_OPENED' })
   }
 
-  onClose = (later = false, maxRatings = false) => {
-    const { dismiss, storeLink, noOfDays } = this.props
-    let rating = 0
-    if (later === false) {
-      // eslint-disable-next-line prefer-destructuring
-      rating = this.state.rating
-    }
-    if (maxRatings === true) {
-      Linking.canOpenURL(storeLink).then(
-        (supported) => {
-          // eslint-disable-next-line no-unused-expressions
-          supported && Linking.openURL(storeLink)
-        },
-        err => console.log(err)
-      )
-    }
-    setShowDate(rating, noOfDays)
-    if (later === true) {
-      clearTimeout(this.timer)
-      this.setState({ rateVisible: false, thanksVisible: false }, dismiss)
-      if(!this.state.thanksVisible) {
-        this.onRemindLater()
-      }
-    } else {
-      this.setState({ rateVisible: false, thanksVisible: true }, this.startTimer)
-      this.onSubmit()
-    }
+  redirectToStore = (storeLink) => Linking.canOpenURL(storeLink)
+    .then( (supported) => {
+        // eslint-disable-next-line no-unused-expressions
+        supported && Linking.openURL(storeLink)
+      },
+      err => console.log(err)
+    )
+
+  showThankYouScreen = () => this.setState({ rateVisible: false, thanksVisible: true }, this.startTimer)
+
+  startTimer = () => {
+    const { timeout } = this.props
+    this.timer = setTimeout(this.closeThankYouScreen, timeout)
   }
 
-  setRating = rating => {
-    const ratingType = getRatingType(rating)
-    this.setState({ rating }, () => this.props.sendEvent({ type: 'click', ratingType }))
-  }
-
-  onChangeText = (text) => {
-    this.setState({ feedback: text })
-  }
+  closeThankYouScreen = () => this.setState({ thanksVisible: false }, this.props.dismiss)
 
   onSubmit = () => {
     const { feedback, rating } = this.state
@@ -145,32 +120,101 @@ export default class RatingComponent extends Component {
   }
 
   onRemindLater = () => {
-    this.props.sendEvent({ type: 'later' })
+    const { sendEvent, dismiss } = this.props
+    clearTimeout(this.timer)
+    if(!this.state.thanksVisible) {
+      sendEvent({ type: 'later' })
+    }
+    this.setState({ rateVisible: false, thanksVisible: false }, dismiss)
   }
 
-  closeThankYouScreen = () => this.setState({ thanksVisible: false }, this.props.dismiss)
+  onClose = (later = false, maxRatings = false) => {
+    const { storeLink, noOfDays } = this.props
+    const { rating } = this.state
+    setShowDate(rating, noOfDays)
 
-  startTimer = () => {
-    const { timeout } = this.props
-    this.timer = setTimeout(this.closeThankYouScreen, timeout)
+    if (later === true) {
+      this.onRemindLater()
+    } else {  // Submit clicked -> Show Thank You Screen and Send Submit Event
+      this.showThankYouScreen()
+      this.onSubmit()
+    }
+
+    if (maxRatings === true) {
+      this.redirectToStore(storeLink)
+    }
   }
 
-  showButton = () =>
-    this.setState({
-      showButton: true,
-      showInputText: false
-    })
+  onChangeText = (text) => {
+    this.setState({ feedback: text })
+  }
 
-  showInput = () =>
-    this.setState({
-      showInputText: true,
-      showButton: false
-    })
+  setRating = rating => {
+    const ratingType = getRatingType(rating)
+    this.setState({ rating }, () => this.props.sendEvent({ type: 'CLICK', ratingType }))
+  }
+
+  ThankYouScreen = () => (
+    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+      <View style={styles.thanksView}>
+        <Text style={styles.thanksText}>Thank You for your feedback!</Text>
+      </View>
+    </View>
+  )
+
+  renderButton = ({ maxRatings }) => {
+    //Default behaviour - 5 star ratings
+    let buttonStyle = [styles.button]
+    let handleClick = () => this.onClose(false, true)
+    let buttonText = 'Rate Us on App Store'
+
+    if(maxRatings === false) {
+      buttonStyle.push({ marginTop: 28 })
+      handleClick = this.onClose
+      buttonText = 'Submit'
+    }
+      return(
+        <TouchableOpacity style={[styles.button]} onPress={handleClick}>
+          <Text style={styles.buttonText}>{buttonText}</Text>
+        </TouchableOpacity>
+      )
+  }
+
+  renderInputText = () => (
+    <View style={{ width: '100%', alignSelf: 'flex-start' }}>
+      <TextInput
+        style={styles.input}
+        onChangeText={this.onChangeText}
+        placeholder="Type your feedback here"
+      />
+      {Platform.OS === 'ios' && (
+        <View
+          style={[
+            styles.input,
+            { height: 1, backgroundColor: '#979797', marginTop: 3 }
+          ]}
+        />
+      )}
+    </View>
+  )
+
+  renderRatings = ({ type }) => (
+    <View>
+      <Text style={styles.title}>Rate our App</Text>
+      <Text style={styles.subtext}>We’d love to hear from you</Text>
+      <RatingsDisplay
+        setRating={this.setRating}
+        type={type}
+      />
+    </View>
+  )
 
   render() {
-    const { showButton, showInputText, thanksVisible, rateVisible } = this.state
+    const { renderRatings: RateView, renderButton: Button, ThankYouScreen, renderInputText: InputText } = this
+    const { thanksVisible, rateVisible, rating } = this.state
     const { type } = this.props
     const show = rateVisible || thanksVisible
+    const maxRatings = rating === 5
     return (
       <Modal
         visible={show}
@@ -180,9 +224,7 @@ export default class RatingComponent extends Component {
       >
         <TouchableOpacity
           activeOpacity={1}
-          onPressOut={() => {
-            this.onClose(true)
-          }}
+          onPress={() => this.onClose(true)}
           style={{ justifyContent: 'flex-end', flex: 1, backgroundColor: setAlpha('#000000', 50) }}
         >
           {rateVisible && (
@@ -191,46 +233,12 @@ export default class RatingComponent extends Component {
                 activeOpacity={1}
                 style={{ backgroundColor: 'white', width: '100%', alignItems: 'center' }}
               >
-                <Text style={styles.title}>Rate our App</Text>
-                <Text style={styles.subtext}>We’d love to hear from you</Text>
-                <RatingsDisplay
-                  showButton={this.showButton}
-                  showInput={this.showInput}
-                  setRating={this.setRating}
-                  type={type}
-                />
-                {showButton && (
-                  <View>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => this.onClose(false, true)}
-                    >
-                      <Text style={styles.buttonText}>Rate Us on App Store</Text>
-                    </TouchableOpacity>
-                  </View>
+                <RateView type={type} />
+                { (maxRatings === false) && (
+                  <InputText />
                 )}
-                {showInputText && (
-                  <View style={{ width: '100%', alignSelf: 'flex-start' }}>
-                    <TextInput
-                      style={styles.input}
-                      onChangeText={this.onChangeText}
-                      placeholder="Type your feedback here"
-                    />
-                    {Platform.OS === 'ios' && (
-                      <View
-                        style={[
-                          styles.input,
-                          { height: 1, backgroundColor: '#979797', marginTop: 3 }
-                        ]}
-                      />
-                    )}
-                    <TouchableOpacity
-                      style={[styles.button, { marginTop: 28 }]}
-                      onPress={this.onClose}
-                    >
-                      <Text style={styles.buttonText}>Submit</Text>
-                    </TouchableOpacity>
-                  </View>
+                { (rating > 0) && (
+                  <Button maxRatings={maxRatings} />
                 )}
                 <TouchableOpacity style={{ marginTop: 16 }} onPress={() => this.onClose(true)}>
                   <Text style={styles.later}>Remind me Later</Text>
@@ -238,16 +246,8 @@ export default class RatingComponent extends Component {
               </TouchableOpacity>
             </KeyBoardAvoidView>
           )}
-          {thanksVisible && (
-            <View
-              activeOpacity={1}
-              style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
-            >
-              <View style={styles.thanksView}>
-                <Text style={styles.thanksText}>Thank You for your feedback!</Text>
-              </View>
-            </View>
-          )}
+
+          { thanksVisible && <ThankYouScreen /> }
         </TouchableOpacity>
       </Modal>
     )
@@ -255,14 +255,15 @@ export default class RatingComponent extends Component {
 }
 
 RatingComponent.defaultProps = {
-  type: 0,
+  type: 1,
   timeout: 1000,
   noOfDays: 90,
-  sendEvent: () => {}
+  sendEvent: () => {},
+  dismiss: () => {}
 }
 
 RatingComponent.propTypes = {
-  dismiss: PropTypes.func.isRequired,
+  dismiss: PropTypes.func,
   type: PropTypes.number,
   timeout: PropTypes.number,
   noOfDays: PropTypes.number,
