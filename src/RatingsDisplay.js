@@ -57,7 +57,7 @@ export default class RatingsCard extends Component {
             <Image style={styles.starThumbnail} source={rateIcon} />
           )}
           { type === 2 && (
-            <Image style={styles.emojiThumbnail} opacity={emojiOpacity} source={rateIcon} />
+            <Image style={styles.emojiThumbnail} opacity={opacity[index]} source={rateIcon} />
           )}
         </TouchableOpacity>
         { type === 2 && (
