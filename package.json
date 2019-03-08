@@ -1,6 +1,6 @@
 
 {
-  "name": "react-native-app-rater",
+  "name": "@housing/react-native-app-rater",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,7 +10,7 @@
   "keywords": [
     "react-native"
   ],
-  "author": "",
+  "author": "Manthan Patel",
   "license": "",
   "peerDependencies": {
     "react-native": "0.57.8"
