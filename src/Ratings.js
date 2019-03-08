@@ -4,10 +4,7 @@ import PropTypes from 'prop-types'
 import RatingComponent from './RatingComponent'
 
 export default class Ratings extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { showRatingComponent: false }
-  }
+  state = { showRatingComponent: false }
 
   componentDidMount() {
     this.shouldShow()

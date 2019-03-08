@@ -121,7 +121,7 @@ export default class RatingComponent extends Component {
 
   onRemindLater = () => {
     const { sendEvent, dismiss } = this.props
-    clearTimeout(this.timer)
+    this.timer && clearTimeout(this.timer)
     if(!this.state.thanksVisible) {
       sendEvent({ type: 'LATER' })
     }
@@ -130,7 +130,7 @@ export default class RatingComponent extends Component {
 
   onClose = (later = false, maxRatings = false) => {
     const { storeLink, noOfDays } = this.props
-    const { rating } = this.state
+    const { rating } = later ? 0 : this.state
     setShowDate(rating, noOfDays)
 
     if (later === true) {
@@ -154,7 +154,7 @@ export default class RatingComponent extends Component {
     this.setState({ rating }, () => this.props.sendEvent({ type: 'CLICK', ratingType }))
   }
 
-  ThankYouScreen = () => (
+  renderThankYouScreen = () => (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
       <View style={styles.thanksView}>
         <Text style={styles.thanksText}>Thank You for your feedback!</Text>
@@ -162,22 +162,15 @@ export default class RatingComponent extends Component {
     </View>
   )
 
-  renderButton = ({ maxRatings }) => {
-    // Default behaviour - 5 star ratings
-    let buttonStyle = [styles.button]
-    let handleClick = () => this.onClose(false, true)
-    let buttonText = 'Rate Us on App Store'
-
-    if(maxRatings === false) {
-      buttonStyle.push({ marginTop: 28 })
-      handleClick = this.onClose
-      buttonText = 'Submit'
-    }
-      return(
-        <TouchableOpacity style={buttonStyle} onPress={handleClick}>
-          <Text style={styles.buttonText}>{buttonText}</Text>
-        </TouchableOpacity>
-      )
+  renderButton = (maxRatings) => {
+    const buttonStyle = [styles.button, !maxRatings && {marginTop: 28}]
+    const handleClick = () => this.onClose(false, maxRatings)
+    const buttonText = maxRatings ? 'Rate us on App store' : 'Submit'
+    return(
+      <TouchableOpacity style={buttonStyle} onPress={handleClick}>
+        <Text style={styles.buttonText}>{buttonText}</Text>
+      </TouchableOpacity>
+    )
   }
 
   renderInputText = () => (
@@ -198,7 +191,7 @@ export default class RatingComponent extends Component {
     </View>
   )
 
-  renderRatings = ({ type }) => (
+  renderRatings = (type) => (
     <View style={{width: '100%'}}>
       <Text style={styles.title}>Rate our App</Text>
       <Text style={styles.subtext}>We’d love to hear from you</Text>
@@ -210,7 +203,6 @@ export default class RatingComponent extends Component {
   )
 
   render() {
-    const { renderRatings: RateView, renderButton: Button, ThankYouScreen, renderInputText: InputText } = this
     const { thanksVisible, rateVisible, rating } = this.state
     const { type } = this.props
     const show = rateVisible || thanksVisible
@@ -233,13 +225,9 @@ export default class RatingComponent extends Component {
                 activeOpacity={1}
                 style={{ backgroundColor: 'white', width: '100%', alignItems: 'center' }}
               >
-                <RateView type={type} />
-                { (maxRatings === false && rating > 0) && (
-                  <InputText />
-                )}
-                { (rating > 0) && (
-                  <Button maxRatings={maxRatings} />
-                )}
+                {this.renderRatings(type)}
+                {(maxRatings === false && rating > 0) && this.renderInputText()}
+                {(rating > 0) && this.renderButton(maxRatings)}
                 <TouchableOpacity style={{ marginTop: 16 }} onPress={() => this.onClose(true)}>
                   <Text style={styles.later}>Remind me Later</Text>
                 </TouchableOpacity>
@@ -247,7 +235,7 @@ export default class RatingComponent extends Component {
             </KeyBoardAvoidView>
           )}
 
-          { thanksVisible && <ThankYouScreen /> }
+          {thanksVisible && this.renderThankYouScreen()}
         </TouchableOpacity>
       </Modal>
     )
