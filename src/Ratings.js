@@ -18,7 +18,7 @@ export default class Ratings extends Component {
   }
 
   async shouldShow() {
-    const { onDismiss } = this.props
+    const { onBlur } = this.props
     const showDate = await AsyncStorage.getItem('SHOW_DATE')
     if (showDate) {
       const { nextTime, neverShow } = JSON.parse(showDate)
@@ -27,10 +27,10 @@ export default class Ratings extends Component {
         if (currentTime >= nextTime) {
           this.setState({ showRatingComponent: true })
         } else {
-          onDismiss()
+          onBlur()
         }
       } else {
-        onDismiss()
+        onBlur()
       }
     } else {
       this.setState({ showRatingComponent: true })
@@ -61,7 +61,8 @@ Ratings.defaultProps = {
   sendEvent: () => {},
   noOfDays: 90,
   thanksScreenTimeout: 3000,
-  onDismiss: () => {}
+  onDismiss: () => {},
+  onBlur: () => {}
 }
 
 Ratings.propTypes = {
@@ -69,5 +70,6 @@ Ratings.propTypes = {
   thanksScreenTimeout: PropTypes.number,
   noOfDays: PropTypes.number,
   sendEvent: PropTypes.func,
-  onDismiss: PropTypes.func
+  onDismiss: PropTypes.func,
+  onBlur:PropTypes.func
 }

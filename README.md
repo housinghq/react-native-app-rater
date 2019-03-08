@@ -57,7 +57,8 @@ Prop | Description | Type | Default
 ------ | ------ | ------ | ------
  **`type`** | Rating Type: either `0`, `1` or `2` - 0 - Not Displayed, 1 - Ratings with Stars, 2 - Ratings with Emojis | number | 0
  **`noOfDays`** | Show Ratings next after 'noOfDays' Days | number | 90
- **`onDismiss`** | A function called when Ratings is closed or not displayed (as Days Passed < noOfDays or type is 0) | function | (none)
  **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`
  **`thanksScreenTimeout`** | timeout (in ms) after which the Thank You Screen will be closed (automatically) | number | 3000 (3s)
+ **`onDismiss`** | A function called when Ratings is closed | function | (none)
+ **`onBlur`** | A function called when Ratings is not displayed (as Days Passed < `noOfDays`) | function | (none)
  **`sendEvent`** | function to handle GA-Events Call **params** : Object - `keys`: type (required), ratingsType (optional), feedback (optional)| function | (none)

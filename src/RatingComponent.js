@@ -163,7 +163,7 @@ export default class RatingComponent extends Component {
   )
 
   renderButton = ({ maxRatings }) => {
-    //Default behaviour - 5 star ratings
+    // Default behaviour - 5 star ratings
     let buttonStyle = [styles.button]
     let handleClick = () => this.onClose(false, true)
     let buttonText = 'Rate Us on App Store'
