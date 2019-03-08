@@ -9,7 +9,7 @@
   "keywords": [
     "react-native"
   ],
-  "author": "",
+  "author": "Manthan Patel",
   "license": "ISC",
   "peerDependencies": {
     "react-native": "0.57.8"
