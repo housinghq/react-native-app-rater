@@ -4,7 +4,7 @@ import { AsyncStorage } from 'react-native'
 const msPerDay = 24*60*60*1000
 export const imageLabels = ['Awful', 'Poor', 'Average', 'Good', 'Great']
 
-export const emojiSrc = [
+export const emojis = [
   {
     unselected: require('../assets/Emojis/Simple/Awful.png'),
     selected: require('../assets/Emojis/Color/Awful.png')
@@ -27,7 +27,7 @@ export const emojiSrc = [
   }
 ]
 
-export const star = {
+export const stars = {
   unselected: require('../assets/Stars/simple.png'),
   selected: require('../assets/Stars/color.png')
 }

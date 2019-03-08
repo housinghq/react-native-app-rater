@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Image, FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import PropTypes from 'prop-types'
-import { imageLabels, emojiSrc, star } from './utils'
+import { imageLabels, emojis, stars } from './utils'
 
 const defaultOpacity = 0.7
 const styles = StyleSheet.create({
@@ -33,60 +33,36 @@ const styles = StyleSheet.create({
 })
 
 export default class RatingsCard extends Component {
-  constructor(props) {
-    super(props)
-    const { data, opacity } = this.getIcons(props.type)
-    this.state = {
-      data,
-      opacity
-    }
-  }
-
-  getIcons(type) {
-    let data = []
-    let opacity = []
-    if (type === 1) {
-      for (let i = 1; i <= 5; i += 1) {
-        data.push(star.unselected)
-      }
-    } else {
-      opacity = emojiSrc.map(() => defaultOpacity)
-      data = emojiSrc.map(img => img.unselected)
-    }
-    return { data, opacity }
+  state = {
+    selectedId : null
   }
 
   changeRatings = (index) => {
-    let { data, opacity } = this.state
-    const { setRating, type } = this.props
-    if( type === 1 ) {
-      data = data.map((_, i) => (i <= index) ? star.selected : star.unselected) 
-    } else {
-        data = data.map((_, i) => (i === index) ? emojiSrc[i].selected : emojiSrc[i].unselected)
-        opacity = opacity.map((_, i) => (i === index) ? 1 : defaultOpacity )
-    }
-    setRating(index + 1)
-    this.setState({
-      data,
-      opacity
-    })
+    this.props.setRating(index + 1)
+    this.setState({ selectedId: index })
   }
 
   renderItem = ({ item, index }) => {
+    console.log(item)
     const { type } = this.props
-    const { opacity } = this.state
+    const { selectedId } = this.state
+    const emojiOpacity = (index === selectedId) ? 1 : defaultOpacity
+    const rateIcon = (type === 1) ? 
+      (selectedId && (index <= selectedId) ? stars.selected : stars.unselected) : 
+      (selectedId && (index === selectedId) ? emojis[index].selected : emojis[index].unselected)
+
     return (
       <View style={styles.containerView}>
         <TouchableOpacity onPress={() => this.changeRatings(index)}>
           { type === 1 && (
-            <Image style={styles.starThumbnail} source={item} />
+            <Image style={styles.starThumbnail} source={rateIcon} />
           )}
           { type === 2 && (
-            <Image style={styles.emojiThumbnail} opacity={opacity[index]} source={item} />
+            <Image style={styles.emojiThumbnail} opacity={opacity[index]} source={rateIcon} />
           )}
         </TouchableOpacity>
         { type === 2 && (
-          <Text style={[styles.label, { opacity: opacity[index] }]}>{imageLabels[index]}</Text>
+          <Text style={[styles.label, { opacity: emojiOpacity }]}>{imageLabels[index]}</Text>
         )}
       </View>
     )
@@ -96,7 +72,8 @@ export default class RatingsCard extends Component {
     return (
       <View style={{ width: '100%', marginTop: 16, marginBottom: 16 }}>
         <FlatList
-          data={this.state.data}
+          data={[1, 2, 3, 4, 5]}
+          extraData={this.state.selectedId}
           scrollEnabled={false}
           contentContainerStyle={[styles.flatlistContainer]}
           keyExtractor={(item, index) => index.toString()}
