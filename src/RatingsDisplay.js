@@ -42,14 +42,13 @@ export default class RatingsCard extends Component {
     this.setState({ selectedId: index })
   }
 
-  renderItem = ({ item, index }) => {
-    console.log(item)
+  renderItem = ({ index }) => {
     const { type } = this.props
     const { selectedId } = this.state
     const emojiOpacity = (index === selectedId) ? 1 : defaultOpacity
     const rateIcon = (type === 1) ? 
-      (selectedId && (index <= selectedId) ? stars.selected : stars.unselected) : 
-      (selectedId && (index === selectedId) ? emojis[index].selected : emojis[index].unselected)
+      (selectedId !== null && (index <= selectedId) ? stars.selected : stars.unselected) : 
+      (selectedId !== null && (index === selectedId) ? emojis[index].selected : emojis[index].unselected)
 
     return (
       <View style={styles.containerView}>
