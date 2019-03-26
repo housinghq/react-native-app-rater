@@ -206,7 +206,6 @@ export default class RatingComponent extends Component {
     const { thanksVisible, rateVisible, rating } = this.state
     const { type, thresholdRating } = this.props
     const show = rateVisible || thanksVisible
-    const isThresholdRatings = rating >= thresholdRating
     return (
       <Modal
         visible={show}
@@ -226,8 +225,8 @@ export default class RatingComponent extends Component {
                 style={{ backgroundColor: 'white', width: '100%', alignItems: 'center' }}
               >
                 {this.renderRatings(type)}
-                {(isThresholdRatings === false && rating > 0) && this.renderInputText()}
-                {(rating > 0) && this.renderButton(isThresholdRatings)}
+                {(rating < thresholdRating && rating > 0) && this.renderInputText()}
+                {(rating > 0) && this.renderButton(rating >= thresholdRating)}
                 <TouchableOpacity style={{ marginTop: 16 }} onPress={() => this.onClose(true)}>
                   <Text style={styles.later}>Remind me Later</Text>
                 </TouchableOpacity>
@@ -253,7 +252,6 @@ RatingComponent.defaultProps = {
 
 RatingComponent.propTypes = {
   dismiss: PropTypes.func,
-  checkThresholdRating: PropTypes.func,
   type: PropTypes.number,
   timeout: PropTypes.number,
   noOfDays: PropTypes.number,
