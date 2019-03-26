@@ -128,7 +128,7 @@ export default class RatingComponent extends Component {
     this.setState({ rateVisible: false, thanksVisible: false }, dismiss)
   }
 
-  onClose = (later = false, isThresholdRatings = false) => {
+  onClose = (later = false, isThresholdRating = false) => {
     const { storeLink, noOfDays } = this.props
     const { rating } = later ? 0 : this.state
     setShowDate(rating, noOfDays)
@@ -140,7 +140,7 @@ export default class RatingComponent extends Component {
       this.onSubmit()
     }
 
-    if (isThresholdRatings === true) {
+    if (isThresholdRating === true) {
       this.redirectToStore(storeLink)
     }
   }
@@ -162,10 +162,10 @@ export default class RatingComponent extends Component {
     </View>
   )
 
-  renderButton = (isThresholdRatings) => {
-    const buttonStyle = [styles.button, !isThresholdRatings && {marginTop: 28}]
-    const handleClick = () => this.onClose(false, isThresholdRatings)
-    const buttonText = isThresholdRatings ? 'Rate us on App store' : 'Submit'
+  renderButton = (isThresholdRating) => {
+    const buttonStyle = [styles.button, !isThresholdRating && {marginTop: 28}]
+    const handleClick = () => this.onClose(false, isThresholdRating)
+    const buttonText = isThresholdRating ? 'Rate us on App store' : 'Submit'
     return(
       <TouchableOpacity style={buttonStyle} onPress={handleClick}>
         <Text style={styles.buttonText}>{buttonText}</Text>
