@@ -128,7 +128,7 @@ export default class RatingComponent extends Component {
     this.setState({ rateVisible: false, thanksVisible: false }, dismiss)
   }
 
-  onClose = (later = false, maxRatings = false) => {
+  onClose = (later = false, isThresholdRatings = false) => {
     const { storeLink, noOfDays } = this.props
     const { rating } = later ? 0 : this.state
     setShowDate(rating, noOfDays)
@@ -140,7 +140,7 @@ export default class RatingComponent extends Component {
       this.onSubmit()
     }
 
-    if (maxRatings === true) {
+    if (isThresholdRatings === true) {
       this.redirectToStore(storeLink)
     }
   }
@@ -162,10 +162,10 @@ export default class RatingComponent extends Component {
     </View>
   )
 
-  renderButton = (maxRatings) => {
-    const buttonStyle = [styles.button, !maxRatings && {marginTop: 28}]
-    const handleClick = () => this.onClose(false, maxRatings)
-    const buttonText = maxRatings ? 'Rate us on App store' : 'Submit'
+  renderButton = (isThresholdRatings) => {
+    const buttonStyle = [styles.button, !isThresholdRatings && {marginTop: 28}]
+    const handleClick = () => this.onClose(false, isThresholdRatings)
+    const buttonText = isThresholdRatings ? 'Rate us on App store' : 'Submit'
     return(
       <TouchableOpacity style={buttonStyle} onPress={handleClick}>
         <Text style={styles.buttonText}>{buttonText}</Text>
@@ -204,9 +204,9 @@ export default class RatingComponent extends Component {
 
   render() {
     const { thanksVisible, rateVisible, rating } = this.state
-    const { type } = this.props
+    const { type, thresholdRating } = this.props
     const show = rateVisible || thanksVisible
-    const maxRatings = rating === 5
+    const isThresholdRatings = rating >= thresholdRating
     return (
       <Modal
         visible={show}
@@ -226,8 +226,8 @@ export default class RatingComponent extends Component {
                 style={{ backgroundColor: 'white', width: '100%', alignItems: 'center' }}
               >
                 {this.renderRatings(type)}
-                {(maxRatings === false && rating > 0) && this.renderInputText()}
-                {(rating > 0) && this.renderButton(maxRatings)}
+                {(isThresholdRatings === false && rating > 0) && this.renderInputText()}
+                {(rating > 0) && this.renderButton(isThresholdRatings)}
                 <TouchableOpacity style={{ marginTop: 16 }} onPress={() => this.onClose(true)}>
                   <Text style={styles.later}>Remind me Later</Text>
                 </TouchableOpacity>
@@ -246,14 +246,17 @@ RatingComponent.defaultProps = {
   type: 1,
   timeout: 1000,
   noOfDays: 90,
+  thresholdRating: 4,
   sendEvent: () => {},
   dismiss: () => {}
 }
 
 RatingComponent.propTypes = {
   dismiss: PropTypes.func,
+  checkThresholdRating: PropTypes.func,
   type: PropTypes.number,
   timeout: PropTypes.number,
   noOfDays: PropTypes.number,
-  sendEvent: PropTypes.func
+  thresholdRating: PropTypes.number,
+  sendEvent: PropTypes.func,
 }
