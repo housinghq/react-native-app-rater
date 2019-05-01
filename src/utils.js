@@ -60,7 +60,7 @@ export const colors = {
 export function setShowDate(ratings = 0, noOfDays) {
   const today = Date.now()
   const nextTime = today + noOfDays*msPerDay
-  const neverShow = false //ratings === 5
+  const neverShow = ratings === 5
   const showDate = { nextTime, neverShow }
   AsyncStorage.setItem('SHOW_DATE', JSON.stringify(showDate))
 }
