@@ -35,7 +35,7 @@ export default class Ratings extends Component {
   }
 
   render() {
-    const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout, thresholdRating } = this.props
+    const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout, thresholdRating, title } = this.props
     const { showRatingComponent } = this.state
     if(showRatingComponent === true) {
       return (
@@ -47,6 +47,7 @@ export default class Ratings extends Component {
           noOfDays={noOfDays}
           timeout={thanksScreenTimeout}
           thresholdRating={thresholdRating}
+          title={title}
         />
       )
     }
@@ -61,7 +62,8 @@ Ratings.defaultProps = {
   thanksScreenTimeout: 3000,
   onDismiss: () => {},
   onBlur: () => {},
-  thresholdRating: 4
+  thresholdRating: 4,
+  title: 'Rate Your Experience With Housing'
 }
 
 Ratings.propTypes = {
@@ -71,5 +73,6 @@ Ratings.propTypes = {
   thresholdRating: PropTypes.number,
   sendEvent: PropTypes.func,
   onDismiss: PropTypes.func,
-  onBlur:PropTypes.func
+  onBlur:PropTypes.func,
+  title: PropTypes.string
 }

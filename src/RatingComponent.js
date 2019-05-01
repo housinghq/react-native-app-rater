@@ -5,81 +5,50 @@ import {
   View,
   TouchableOpacity,
   Modal,
-  TextInput,
   Linking,
-  Platform,
-  KeyboardAvoidingView
+  Platform
 } from 'react-native'
 import PropTypes from 'prop-types'
-import getRatingType, { setAlpha, setShowDate } from './utils'
-import RatingsDisplay from './RatingsDisplay';
+import getRatingType, { colors, setShowDate, isNilOrEmpty } from './utils'
+import RatingsDisplay from './RatingsDisplay'
+import FeedbackView from './FeedbackView'
+import BottomView from './BottomView'
 
-const KeyBoardAvoidView = Platform.OS === 'ios' ? KeyboardAvoidingView : View
+const storeName = Platform.OS === 'ios' ? 'App' : 'Play'
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'flex-end',
     flex: 1,
-    flexDirection: 'column',
+    backgroundColor: colors.black50 
+  },
+  wrapper: {
+    backgroundColor: 'white',
     width: '100%',
     alignItems: 'center',
-    marginBottom: 0,
-    marginTop: 0,
-    justifyContent: 'flex-end'
+    paddingBottom: 15
   },
   thanksText: {
-    fontSize: 14,
-    fontFamily: 'Arial',
+    fontSize: 16,
     color: '#000000',
     textAlign: 'center'
   },
   thanksView: {
-    height: 120,
-    width: 265,
+    height: 70,
+    width: 260,
+    borderRadius: 2,
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center'
   },
   title: {
     fontSize: 16,
+    fontWeight: '500',
     textAlign: 'center',
-    fontFamily: 'Arial',
     flexWrap: 'wrap',
     color: '#292929',
-    marginTop: 24
-  },
-  subtext: {
-    fontSize: 12,
-    marginTop: 4,
-    textAlign: 'center',
-    fontFamily: 'Arial',
-    color: '#292929'
-  },
-  later: {
-    textAlign: 'center',
-    fontSize: 14,
-    color: '#292929',
-    marginBottom: 25,
-    opacity: 0.5
-  },
-  button: {
-    height: 36,
-    width: 328,
-    backgroundColor: '#1fd290',
-    borderRadius: 4,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontFamily: 'Arial',
-    textAlign: 'center'
-  },
-  input: {
-    width: '100%'-  32,
-    marginLeft: 16,
-    marginRight: 16
+    marginTop: 24,
+    marginBottom: 13
   }
 })
 
@@ -89,7 +58,7 @@ export default class RatingComponent extends Component {
     rateVisible: true,
     thanksVisible: false,
     rating: 0,
-    feedback: ''
+    showFeedback: false
   }
 
   componentDidMount(){
@@ -113,10 +82,30 @@ export default class RatingComponent extends Component {
 
   closeThankYouScreen = () => this.setState({ thanksVisible: false }, this.props.dismiss)
 
-  onSubmit = () => {
-    const { feedback, rating } = this.state
-    const ratingType =  getRatingType(rating)
-    this.props.sendEvent({ type: 'SUBMIT', ratingType, feedback })
+  onSubmit = (feedback = '') => {
+    const { rating } = this.state
+    const { thresholdRating, noOfDays, storeLink } = this.props
+    const isThresholdRating = rating >= thresholdRating
+    if( !isThresholdRating && (isNilOrEmpty(feedback) || typeof feedback !== 'string')) {
+      this.setState({ showFeedback: true })
+    }
+    else {
+      this.closeFeedback()
+      const ratingType =  getRatingType(rating)
+      setShowDate(rating, noOfDays)
+      isThresholdRating && this.redirectToStore(storeLink)
+      this.showThankYouScreen()
+      this.props.sendEvent({ type: 'SUBMIT', ratingType, feedback })
+    }
+  }
+
+  closeFeedback = (callback = () => {}) => {
+    if(typeof callback === 'function') {
+      this.setState({ showFeedback: false }, callback)
+    }
+    else {
+      this.setState({ showFeedback: false })
+    }
   }
 
   onRemindLater = () => {
@@ -128,25 +117,12 @@ export default class RatingComponent extends Component {
     this.setState({ rateVisible: false, thanksVisible: false }, dismiss)
   }
 
-  onClose = (later = false, isThresholdRating = false) => {
-    const { storeLink, noOfDays } = this.props
-    const { rating } = later ? 0 : this.state
-    setShowDate(rating, noOfDays)
-
-    if (later === true) {
-      this.onRemindLater()
-    } else {  // Submit clicked -> Show Thank You Screen and Send Submit Event
-      this.showThankYouScreen()
-      this.onSubmit()
-    }
-
-    if (isThresholdRating === true) {
-      this.redirectToStore(storeLink)
-    }
-  }
-
-  onChangeText = (text) => {
-    this.setState({ feedback: text })
+  onClose = () => {
+    const { showFeedback } = this.state
+    const { noOfDays } = this.props
+    !showFeedback && this.onRemindLater()
+    showFeedback && this.closeFeedback(this.onRemindLater)
+    setShowDate(0, noOfDays)
   }
 
   setRating = rating => {
@@ -162,39 +138,12 @@ export default class RatingComponent extends Component {
     </View>
   )
 
-  renderButton = (isThresholdRating) => {
-    const buttonStyle = [styles.button, !isThresholdRating && {marginTop: 28}]
-    const handleClick = () => this.onClose(false, isThresholdRating)
-    const buttonText = isThresholdRating ? 'Rate us on App store' : 'Submit'
-    return(
-      <TouchableOpacity style={buttonStyle} onPress={handleClick}>
-        <Text style={styles.buttonText}>{buttonText}</Text>
-      </TouchableOpacity>
-    )
-  }
-
-  renderInputText = () => (
-    <View style={{ width: '100%', alignSelf: 'flex-start' }}>
-      <TextInput
-        style={styles.input}
-        onChangeText={this.onChangeText}
-        placeholder="Type your feedback here"
-      />
-      {Platform.OS === 'ios' && (
-        <View
-          style={[
-            styles.input,
-            { height: 1, backgroundColor: '#979797', marginTop: 3 }
-          ]}
-        />
-      )}
-    </View>
+  renderTitle = (title) => (
+    <Text style={styles.title}>{title}</Text>
   )
 
   renderRatings = (type) => (
-    <View style={{width: '100%'}}>
-      <Text style={styles.title}>Rate our App</Text>
-      <Text style={styles.subtext}>We’d love to hear from you</Text>
+    <View style={{ width: '100%' }}>
       <RatingsDisplay
         setRating={this.setRating}
         type={type}
@@ -202,38 +151,57 @@ export default class RatingComponent extends Component {
     </View>
   )
 
+  renderBottomView = (rating, thresholdRating) => {
+    const buttonType = (rating > 0) ? 'primary' : 'none'
+    const buttonText = (rating >= thresholdRating) ?
+      `Rate us on ${storeName} store` :
+      'Tell us what went wrong'
+    return (
+      <BottomView
+        style={{ marginBottom: 25 }}
+        buttonType={buttonType}
+        buttonText={buttonText}
+        onButtonPress={this.onSubmit}
+        onLaterPress={this.onClose}
+      />
+    )
+  }
+
   render() {
-    const { thanksVisible, rateVisible, rating } = this.state
-    const { type, thresholdRating } = this.props
+    const { thanksVisible, rateVisible, rating, showFeedback } = this.state
+    const { type, thresholdRating, title } = this.props
     const show = rateVisible || thanksVisible
     return (
       <Modal
         visible={show}
         animationType="fade"
         transparent
-        onRequestClose={() => this.onClose(true)}
+        onRequestClose={this.onClose}
       >
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => this.onClose(true)}
-          style={{ justifyContent: 'flex-end', flex: 1, backgroundColor: setAlpha('#000000', 50) }}
+          onPress={this.onClose}
+          style={styles.container}
         >
           {rateVisible && (
-            <KeyBoardAvoidView behavior="padding">
+            <View>
               <TouchableOpacity
                 activeOpacity={1}
-                style={{ backgroundColor: 'white', width: '100%', alignItems: 'center' }}
+                style={styles.wrapper}
               >
+                {this.renderTitle(title)}
                 {this.renderRatings(type)}
-                {(rating < thresholdRating && rating > 0) && this.renderInputText()}
-                {(rating > 0) && this.renderButton(rating >= thresholdRating)}
-                <TouchableOpacity style={{ marginTop: 16 }} onPress={() => this.onClose(true)}>
-                  <Text style={styles.later}>Remind me Later</Text>
-                </TouchableOpacity>
+                {this.renderBottomView(rating, thresholdRating)}
               </TouchableOpacity>
-            </KeyBoardAvoidView>
+            </View>
           )}
-
+          <Modal visible={showFeedback} animationType="slide" onRequestClose={this.closeFeedback}>
+            <FeedbackView
+              onClose={this.closeFeedback}
+              onPressLater={this.onClose}
+              onSubmit={this.onSubmit}
+            />
+          </Modal>
           {thanksVisible && this.renderThankYouScreen()}
         </TouchableOpacity>
       </Modal>
@@ -256,5 +224,5 @@ RatingComponent.propTypes = {
   timeout: PropTypes.number,
   noOfDays: PropTypes.number,
   thresholdRating: PropTypes.number,
-  sendEvent: PropTypes.func,
+  sendEvent: PropTypes.func
 }

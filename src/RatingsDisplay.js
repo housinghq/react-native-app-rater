@@ -46,6 +46,7 @@ export default class RatingsCard extends Component {
     const { type } = this.props
     const { selectedId } = this.state
     const emojiOpacity = (index === selectedId) ? 1 : defaultOpacity
+    const fontWeight = (index === selectedId) ? '500' : 'normal'
     const rateIcon = (type === 1) ? 
       (selectedId !== null && (index <= selectedId) ? stars.selected : stars.unselected) : 
       (selectedId !== null && (index === selectedId) ? emojis[index].selected : emojis[index].unselected)
@@ -61,7 +62,7 @@ export default class RatingsCard extends Component {
           )}
         </TouchableOpacity>
         { type === 2 && (
-          <Text style={[styles.label, { opacity: emojiOpacity }]}>{imageLabels[index]}</Text>
+          <Text style={[styles.label, { opacity: emojiOpacity, fontWeight: fontWeight }]}>{imageLabels[index]}</Text>
         )}
       </View>
     )
