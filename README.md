@@ -46,8 +46,10 @@ const storeLink = Platform.select({	// To redirect users to the respective app s
 export class RateApp extends Component {
   render() {
 		<RNRateApp
-			type={1}
+			type={2}
 			storeLink={storeLink}
+			noOfDays={7}
+			thanksScreenTimeout={1000}
 		/>
 	}
 }
@@ -56,6 +58,7 @@ export class RateApp extends Component {
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
  **`type`** | Rating Type: either `0`, `1` or `2` - 0 - Not Displayed, 1 - Ratings with Stars, 2 - Ratings with Emojis | number | 0
+ **`title`** | Title of the Rating Screen to be displayed | string | `Rate Your Experience With Housing`
  **`noOfDays`** | Show Ratings next after 'noOfDays' Days | number | 90
  **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`
  **`thanksScreenTimeout`** | timeout (in ms) after which the Thank You Screen will be closed (automatically) | number | 3000 (3s)
