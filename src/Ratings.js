@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AsyncStorage } from 'react-native'
+import { AsyncStorage } from 'react-native'
 import PropTypes from 'prop-types'
 import RatingComponent from './RatingComponent'
 
@@ -35,7 +35,7 @@ export default class Ratings extends Component {
   }
 
   render() {
-    const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout, thresholdRating } = this.props
+    const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout, thresholdRating, title, feedbackPlaceholder } = this.props
     const { showRatingComponent } = this.state
     if(showRatingComponent === true) {
       return (
@@ -47,6 +47,8 @@ export default class Ratings extends Component {
           noOfDays={noOfDays}
           timeout={thanksScreenTimeout}
           thresholdRating={thresholdRating}
+          title={title}
+          feedbackPlaceholder={feedbackPlaceholder}
         />
       )
     }
@@ -61,7 +63,9 @@ Ratings.defaultProps = {
   thanksScreenTimeout: 3000,
   onDismiss: () => {},
   onBlur: () => {},
-  thresholdRating: 4
+  thresholdRating: 4,
+  title: 'Rate Your Experience With Housing',
+  feedbackPlaceholder: 'E.g. I’m not able to access owner or agent contact details'
 }
 
 Ratings.propTypes = {
@@ -71,5 +75,7 @@ Ratings.propTypes = {
   thresholdRating: PropTypes.number,
   sendEvent: PropTypes.func,
   onDismiss: PropTypes.func,
-  onBlur:PropTypes.func
+  onBlur:PropTypes.func,
+  title: PropTypes.string,
+  feedbackPlaceholder: PropTypes.string
 }
