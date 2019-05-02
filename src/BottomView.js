@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   buttonText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     fontWeight: '500',
     textAlign: 'center'
@@ -30,16 +30,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '500',
-    color: '#292929',
+    color: colors.grey,
     opacity: 0.5
   }
 })
 
 export default class BottomView extends Component {
 
-  renderButton = (onPress, buttonText, buttonType) => {
+  renderPositiveButton = (onPress, buttonText, buttonType) => {
     const isDisabled = buttonType === 'disabled'
-    const color = isDisabled ? colors.black10 : '#1fd290'
+    const color = isDisabled ? colors.black10 : colors.green
     return (
       <TouchableOpacity style={[styles.button, { backgroundColor: color }]} disabled={isDisabled} onPress={onPress}>
         <Text style={styles.buttonText}>{buttonText}</Text>
@@ -54,12 +54,14 @@ export default class BottomView extends Component {
   )
 
   render() {
-    const { onButtonPress, onLaterPress, style, buttonType, buttonText } = this.props
-    const laterButtonStyle = (buttonType !== 'none') ? { marginLeft: 40 } : {}
+    const { onPositiveButtonPress, onLaterPress, style, positiveButtonType, positiveButtonText } = this.props
+    const laterButtonStyle = (positiveButtonType !== 'none') ? { marginLeft: 40 } : {}
     return (
       <View style={[styles.container, style]}>
         {this.renderRemindLater(onLaterPress, laterButtonStyle)}
-        {(buttonType !== 'none') && this.renderButton(onButtonPress, buttonText, buttonType)}
+        {(positiveButtonType !== 'none') &&
+          this.renderPositiveButton(onPositiveButtonPress, positiveButtonText, positiveButtonType)
+        }
       </View>
     )
   }
@@ -67,15 +69,15 @@ export default class BottomView extends Component {
 
 BottomView.propTypes = {
   onLaterPress: PropTypes.func.isRequired,
-  onButtonPress: PropTypes.func,
+  onPositiveButtonPress: PropTypes.func,
   style: PropTypes.object,
-  buttonText: PropTypes.string,
-  buttonType: PropTypes.oneOf(['none', 'primary', 'disabled'])
+  positiveButtonText: PropTypes.string,
+  positiveButtonType: PropTypes.oneOf(['none', 'primary', 'disabled'])
 }
 
 BottomView.defaultProps = {
   style: {},
-  buttonText: 'Submit' ,
-  buttonType: 'primary',
-  onButtonPress: () => {}
+  positiveButtonText: 'Submit' ,
+  positiveButtonType: 'primary',
+  onPositiveButtonPress: () => {}
 }

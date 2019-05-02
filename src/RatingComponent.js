@@ -23,21 +23,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black50 
   },
   wrapper: {
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     width: '100%',
     alignItems: 'center',
     paddingBottom: 15
   },
   thanksText: {
     fontSize: 16,
-    color: '#000000',
+    color: colors.black0,
     textAlign: 'center'
   },
   thanksView: {
     height: 70,
     width: 260,
     borderRadius: 2,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     flexWrap: 'wrap',
-    color: '#292929',
+    color: colors.grey,
     marginTop: 24,
     marginBottom: 13
   }
@@ -82,24 +82,31 @@ export default class RatingComponent extends Component {
 
   closeThankYouScreen = () => this.setState({ thanksVisible: false }, this.props.dismiss)
 
-  onSubmit = (feedback = '') => {
+  onSubmit = (feedback) => {
     const { rating } = this.state
     const { thresholdRating, noOfDays, storeLink } = this.props
     const isThresholdRating = rating >= thresholdRating
-    if( !isThresholdRating && (isNilOrEmpty(feedback) || typeof feedback !== 'string')) {
+    const ratingType =  getRatingType(rating)
+    !isThresholdRating && this.closeFeedback()
+    setShowDate(rating, noOfDays)
+    isThresholdRating && this.redirectToStore(storeLink)
+    this.showThankYouScreen()
+    this.props.sendEvent({ type: 'SUBMIT', ratingType, feedback })
+  }
+
+  onPress = (feedback = '') => {
+    const { rating } = this.state
+    const { thresholdRating } = this.props
+    if((rating < thresholdRating) && (isNilOrEmpty(feedback) || typeof feedback !== 'string')) {
       this.setState({ showFeedback: true })
     }
     else {
-      this.closeFeedback()
-      const ratingType =  getRatingType(rating)
-      setShowDate(rating, noOfDays)
-      isThresholdRating && this.redirectToStore(storeLink)
-      this.showThankYouScreen()
-      this.props.sendEvent({ type: 'SUBMIT', ratingType, feedback })
+      feedback = (typeof feedback !== 'string') ? '' : feedback
+      this.onSubmit(feedback)
     }
   }
 
-  closeFeedback = (callback = () => {}) => {
+  closeFeedback = (callback = null) => {
     if(typeof callback === 'function') {
       this.setState({ showFeedback: false }, callback)
     }
@@ -159,9 +166,9 @@ export default class RatingComponent extends Component {
     return (
       <BottomView
         style={{ marginBottom: 25 }}
-        buttonType={buttonType}
-        buttonText={buttonText}
-        onButtonPress={this.onSubmit}
+        positiveButtonType={buttonType}
+        positiveButtonText={buttonText}
+        onPositiveButtonPress={this.onPress}
         onLaterPress={this.onClose}
       />
     )
@@ -169,7 +176,7 @@ export default class RatingComponent extends Component {
 
   render() {
     const { thanksVisible, rateVisible, rating, showFeedback } = this.state
-    const { type, thresholdRating, title } = this.props
+    const { type, thresholdRating, title,feedbackPlaceholder } = this.props
     const show = rateVisible || thanksVisible
     return (
       <Modal
@@ -200,6 +207,7 @@ export default class RatingComponent extends Component {
               onClose={this.closeFeedback}
               onPressLater={this.onClose}
               onSubmit={this.onSubmit}
+              placeholder={feedbackPlaceholder}
             />
           </Modal>
           {thanksVisible && this.renderThankYouScreen()}
@@ -224,5 +232,6 @@ RatingComponent.propTypes = {
   timeout: PropTypes.number,
   noOfDays: PropTypes.number,
   thresholdRating: PropTypes.number,
-  sendEvent: PropTypes.func
+  sendEvent: PropTypes.func,
+  feedbackPlaceholder: PropTypes.string.isRequired
 }

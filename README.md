@@ -58,7 +58,8 @@ export class RateApp extends Component {
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
  **`type`** | Rating Type: either `0`, `1` or `2` - 0 - Not Displayed, 1 - Ratings with Stars, 2 - Ratings with Emojis | number | 0
- **`title`** | Title of the Rating Screen to be displayed | string | `Rate Your Experience With Housing`
+ **`title`** | Title of the Rating Screen to be displayed | string | Rate Your Experience With Housing
+ **`feedbackPlaceholder`** | Placeholder value to display when feedback screen is opened | E.g. I’m not able to access owner or agent contact details 
  **`noOfDays`** | Show Ratings next after 'noOfDays' Days | number | 90
  **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`
  **`thanksScreenTimeout`** | timeout (in ms) after which the Thank You Screen will be closed (automatically) | number | 3000 (3s)

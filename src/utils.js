@@ -54,13 +54,19 @@ export function setAlpha(color, alpha) {
 
 export const colors = {
   black50: setAlpha('#000000', 50),
-  black10:setAlpha('#000000', 10)
+  black10: setAlpha('#000000', 10),
+  black0: '#000000',
+  white: '#ffffff',
+  grey: '#292929',
+  grey1: '#e6e6e6',
+  grey2: '#f9f9f9',
+  green: '#1fd290',
 }
 
 export function setShowDate(ratings = 0, noOfDays) {
   const today = Date.now()
   const nextTime = today + noOfDays*msPerDay
-  const neverShow = false //ratings === 5
+  const neverShow = ratings === 5
   const showDate = { nextTime, neverShow }
   AsyncStorage.setItem('SHOW_DATE', JSON.stringify(showDate))
 }

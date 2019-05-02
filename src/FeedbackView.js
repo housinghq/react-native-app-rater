@@ -1,14 +1,19 @@
 import React, { PureComponent } from 'react'
-import { View, TextInput, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, ScrollView, TextInput, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import BottomView from './BottomView'
-import { isNilOrEmpty, closeImg } from './utils'
+import { isNilOrEmpty, closeImg, colors } from './utils'
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   title: {
     fontWeight: '500',
     fontSize: 18,
-    color: '#292929',
+    color: colors.grey,
     textAlign: 'center',
     marginTop: 45
   },
@@ -26,7 +31,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '500',
-    color: '#292929',
+    color: colors.grey,
     opacity: 0.5,
     marginLeft: 40
   },
@@ -34,15 +39,15 @@ const styles = StyleSheet.create({
     marginTop: 45,
     marginHorizontal: 16,
     height: 140,
-    width: 328,
+    width: 325,
     fontSize: 16,
     paddingTop: 10,
     paddingLeft: 15, 
     borderStyle: 'solid',
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#e6e6e6',
-    backgroundColor: '#f9f9f9',
+    borderColor: colors.grey1,
+    backgroundColor: colors.grey2,
     textAlignVertical: 'top'
   },
   bottomView: {
@@ -52,8 +57,6 @@ const styles = StyleSheet.create({
     marginVertical: 35
   }
 })
-
-const placeholder = 'E.g. I’m not able to access owner or agent contact details'
 
 export default class FeedbackView extends PureComponent {
   state = {
@@ -79,7 +82,7 @@ export default class FeedbackView extends PureComponent {
     </TouchableOpacity>
   )
 
-  renderTextInput = () => (
+  renderTextInput = (placeholder) => (
     <TextInput
       style={styles.textView}
       autoFocus
@@ -91,29 +94,33 @@ export default class FeedbackView extends PureComponent {
 
   renderBottomView = (onLaterPress) => {
     const { feedback } = this.state
-    const buttonType = (isNilOrEmpty(feedback)) ? 'disabled' : 'primary'
+    const positiveButtonType = (isNilOrEmpty(feedback)) ? 'disabled' : 'primary'
     return (
       <BottomView
         style={{ marginTop: 35 }}
-        onButtonPress={this.onPressSubmit}
+        onPositiveButtonPress={this.onPressSubmit}
         onLaterPress={onLaterPress}
-        buttonText="Submit"
-        buttonType={buttonType}
+        positiveButtonText="Submit"
+        positiveButtonType={positiveButtonType}
       />
     )
   }
 
   render() {
-    const { onClose, onPressLater } = this.props
+    const { onClose, onPressLater, placeholder } = this.props
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.container}
+        contentInset={{ bottom: 25 }}
+      >
         {this.renderCloseButton(onClose)}
         <View style = {{ flex: 1, alignItems: 'center' }}>
           {this.renderTitle('What went wrong?')}
-          {this.renderTextInput()}
+          {this.renderTextInput(placeholder)}
           {this.renderBottomView(onPressLater)}
         </View>
-      </View>
+      </ScrollView>
     )
   }
 }
@@ -121,5 +128,6 @@ export default class FeedbackView extends PureComponent {
 FeedbackView.propTypes = {
   onClose: PropTypes.func.isRequired,
   onPressLater: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  placeholder: PropTypes.string.isRequired
 }
