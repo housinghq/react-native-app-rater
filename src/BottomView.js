@@ -12,8 +12,7 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 48,
-    width: 215,
-    marginLeft: 40,
+    width: '63%',
     marginRight: 16,
     borderRadius: 4,
     alignSelf: 'flex-end',
@@ -47,18 +46,19 @@ export default class BottomView extends Component {
     )
   }
 
-  renderRemindLater = (onPress, laterButtonStyle) => (
-    <TouchableOpacity onPress={onPress}>
-      <Text style={[styles.later, laterButtonStyle]}>Later</Text>
-    </TouchableOpacity>
+  renderRemindLater = (onPress) => (
+    <View style={{flex: 1, justifyContent:'center', alignContent:'center'}}>
+      <TouchableOpacity onPress={onPress}>
+        <Text style={styles.later}>Later</Text>
+      </TouchableOpacity>
+    </View>
   )
 
   render() {
     const { onPositiveButtonPress, onLaterPress, style, positiveButtonType, positiveButtonText } = this.props
-    const laterButtonStyle = (positiveButtonType !== 'none') ? { marginLeft: 40 } : {}
     return (
       <View style={[styles.container, style]}>
-        {this.renderRemindLater(onLaterPress, laterButtonStyle)}
+        {this.renderRemindLater(onLaterPress)}
         {(positiveButtonType !== 'none') &&
           this.renderPositiveButton(onPositiveButtonPress, positiveButtonText, positiveButtonType)
         }
