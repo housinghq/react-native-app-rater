@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
 })
 
 export default class RatingComponent extends Component {
-  
   state = {
     rateVisible: true,
     thanksVisible: false,
@@ -84,11 +83,17 @@ export default class RatingComponent extends Component {
 
   onSubmit = (feedback) => {
     const { rating } = this.state
-    const { thresholdRating, noOfDays, storeLink } = this.props
+    const { thresholdRating, noOfDays, nOfDayBelowThsldIfSbmt, storeLink } = this.props
     const isThresholdRating = rating >= thresholdRating
-    const ratingType =  getRatingType(rating)
+    const ratingType = getRatingType(rating)
     !isThresholdRating && this.closeFeedback()
-    setShowDate(rating, noOfDays)
+    if (rating >= thresholdRating) {
+      setShowDate(0, thresholdRating, 1000)
+    } else if (rating >= 1 && rating < thresholdRating) {
+      setShowDate(0, thresholdRating, nOfDayBelowThsldIfSbmt)
+    } else {
+      setShowDate(0, thresholdRating, noOfDays)
+    }
     isThresholdRating && this.redirectToStore(storeLink)
     this.showThankYouScreen()
     this.props.sendEvent({ type: 'SUBMIT', ratingType, feedback })
@@ -107,7 +112,7 @@ export default class RatingComponent extends Component {
   }
 
   closeFeedback = (callback = null) => {
-    if(typeof callback === 'function') {
+    if (typeof callback === 'function') {
       this.setState({ showFeedback: false }, callback)
     }
     else {
@@ -118,18 +123,28 @@ export default class RatingComponent extends Component {
   onRemindLater = () => {
     const { sendEvent, dismiss } = this.props
     this.timer && clearTimeout(this.timer)
-    if(!this.state.thanksVisible) {
+    if (!this.state.thanksVisible) {
       sendEvent({ type: 'LATER' })
     }
     this.setState({ rateVisible: false, thanksVisible: false }, dismiss)
   }
 
   onClose = () => {
+    const { rating } = this.state
     const { showFeedback } = this.state
-    const { noOfDays } = this.props
+    const { noOfDays, nOfDayIfNotRated, nOfDayBelowThsldNoSbmt,
+      nOfDayAboveThsldNoSbmt, thresholdRating } = this.props
     !showFeedback && this.onRemindLater()
     showFeedback && this.closeFeedback(this.onRemindLater)
-    setShowDate(0, noOfDays)
+    if (rating >= thresholdRating) {
+      setShowDate(0, thresholdRating, nOfDayAboveThsldNoSbmt)
+    } else if (rating >= 1 && rating < thresholdRating) {
+      setShowDate(0, thresholdRating, nOfDayBelowThsldNoSbmt)
+    } else if (rating == 0) {
+      setShowDate(0, thresholdRating, nOfDayIfNotRated)
+    } else {
+      setShowDate(0, thresholdRating, noOfDays)
+    }
   }
 
   setRating = rating => {
@@ -176,7 +191,7 @@ export default class RatingComponent extends Component {
 
   render() {
     const { thanksVisible, rateVisible, rating, showFeedback } = this.state
-    const { type, thresholdRating, title,feedbackPlaceholder } = this.props
+    const { type, thresholdRating, title, feedbackPlaceholder } = this.props
     const show = rateVisible || thanksVisible
     return (
       <Modal

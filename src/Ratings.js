@@ -35,7 +35,10 @@ export default class Ratings extends Component {
   }
 
   render() {
-    const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout, thresholdRating, title, feedbackPlaceholder } = this.props
+    
+    const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout,
+      nOfDayIfNotRated,nOfDayBelowThsldNoSbmt,nOfDayBelowThsldIfSbmt,
+      nOfDayAboveThsldNoSbmt,thresholdRating, title, feedbackPlaceholder } = this.props
     const { showRatingComponent } = this.state
     if(showRatingComponent === true) {
       return (
@@ -45,6 +48,10 @@ export default class Ratings extends Component {
           sendEvent={sendEvent}
           storeLink={storeLink}
           noOfDays={noOfDays}
+          nOfDayIfNotRated={nOfDayIfNotRated}
+          nOfDayBelowThsldNoSbmt={nOfDayBelowThsldNoSbmt}
+          nOfDayBelowThsldIfSbmt={nOfDayBelowThsldIfSbmt}
+          nOfDayAboveThsldNoSbmt={nOfDayAboveThsldNoSbmt}
           timeout={thanksScreenTimeout}
           thresholdRating={thresholdRating}
           title={title}
@@ -60,6 +67,10 @@ Ratings.defaultProps = {
   type: 0,
   sendEvent: () => {},
   noOfDays: 90,
+  nOfDayIfNotRated:3,
+  nOfDayBelowThsldNoSbmt:90,
+  nOfDayBelowThsldIfSbmt:90,
+  nOfDayAboveThsldNoSbmt:7,
   thanksScreenTimeout: 3000,
   onDismiss: () => {},
   onBlur: () => {},
@@ -72,6 +83,10 @@ Ratings.propTypes = {
   type: PropTypes.number,
   thanksScreenTimeout: PropTypes.number,
   noOfDays: PropTypes.number,
+  noOfDayIfNotRated: PropTypes.number,
+  nOfDayBelowThsldNoSbmt: PropTypes.number,
+  nOfDayBelowThsldIfSbmt: PropTypes.number,
+  nOfDayAboveThsldNoSbmt: PropTypes.number,
   thresholdRating: PropTypes.number,
   sendEvent: PropTypes.func,
   onDismiss: PropTypes.func,
