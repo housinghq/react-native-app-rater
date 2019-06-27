@@ -17,10 +17,12 @@ export default class Ratings extends Component {
   async shouldShow() {
     const { onBlur } = this.props
     const showDate = await AsyncStorage.getItem('SHOW_DATE')
+    console.log("atarshouldShow() R showDate",showDate)
     if (showDate) {
       const { nextTime, neverShow } = JSON.parse(showDate)
       if (neverShow === false) {
         const currentTime = Date.now()
+        console.log("currentTime",currentTime)
         if (currentTime >= nextTime) {
           this.setState({ showRatingComponent: true })
         } else {
@@ -35,8 +37,13 @@ export default class Ratings extends Component {
   }
 
   render() {
-    const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout, thresholdRating, title, feedbackPlaceholder } = this.props
+    
+    const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout,
+      nOfDayIfNotRated,nOfDayBelowThsldNoSbmt,nOfDayBelowThsldIfSbmt,
+      nOfDayAboveThsldNoSbmt,nOfDayAboveThsldIfSbmt,
+       thresholdRating, title, feedbackPlaceholder } = this.props
     const { showRatingComponent } = this.state
+    console.log("atarRender() R showRatingComponent",showRatingComponent)
     if(showRatingComponent === true) {
       return (
         <RatingComponent
@@ -45,6 +52,11 @@ export default class Ratings extends Component {
           sendEvent={sendEvent}
           storeLink={storeLink}
           noOfDays={noOfDays}
+          nOfDayIfNotRated={nOfDayIfNotRated}
+          nOfDayBelowThsldNoSbmt={nOfDayBelowThsldNoSbmt}
+          nOfDayBelowThsldIfSbmt={nOfDayBelowThsldIfSbmt}
+          nOfDayAboveThsldNoSbmt={nOfDayAboveThsldNoSbmt}
+          nOfDayAboveThsldIfSbmt={nOfDayAboveThsldIfSbmt}
           timeout={thanksScreenTimeout}
           thresholdRating={thresholdRating}
           title={title}
@@ -60,6 +72,11 @@ Ratings.defaultProps = {
   type: 0,
   sendEvent: () => {},
   noOfDays: 90,
+  nOfDayIfNotRated:3,
+  nOfDayBelowThsldNoSbmt:10,
+  nOfDayBelowThsldIfSbmt:90,
+  nOfDayAboveThsldNoSbmt:7,
+  nOfDayAboveThsldIfSbmt:1000,
   thanksScreenTimeout: 3000,
   onDismiss: () => {},
   onBlur: () => {},
@@ -72,6 +89,11 @@ Ratings.propTypes = {
   type: PropTypes.number,
   thanksScreenTimeout: PropTypes.number,
   noOfDays: PropTypes.number,
+  noOfDayIfNotRated: PropTypes.number,
+  nOfDayBelowThsldNoSbmt: PropTypes.number,
+  nOfDayBelowThsldIfSbmt: PropTypes.number,
+  nOfDayAboveThsldIfSbmt: PropTypes.number,
+  nOfDayAboveThsldIfSbmt: PropTypes.number,
   thresholdRating: PropTypes.number,
   sendEvent: PropTypes.func,
   onDismiss: PropTypes.func,

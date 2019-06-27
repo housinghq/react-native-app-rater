@@ -63,12 +63,17 @@ export const colors = {
   green: '#1fd290',
 }
 
-export function setShowDate(ratings = 0, noOfDays) {
+export function setShowDate(ratings = 0, threshold, noOfDays ) {
   const today = Date.now()
   const nextTime = today + noOfDays*msPerDay
-  const neverShow = ratings === 5
-  const showDate = { nextTime, neverShow }
+  const neverShow = ratings >= threshold
+  //const noOfDays = {key:noOfDays1}
+  const showDate = { nextTime,noOfDays, neverShow }
+  try{
   AsyncStorage.setItem('SHOW_DATE', JSON.stringify(showDate))
+  }catch(err){
+    console.log("atar error in saving data")
+  }
 }
 
 export default cond([
