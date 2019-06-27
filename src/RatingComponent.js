@@ -83,18 +83,17 @@ export default class RatingComponent extends Component {
 
   onSubmit = (feedback) => {
     const { rating } = this.state
-    const { thresholdRating, noOfDays, nOfDayBelowThsldIfSbmt, nOfDayAboveThsldIfSbmt, storeLink } = this.props
+    const { thresholdRating, noOfDays, nOfDayBelowThsldIfSbmt, storeLink } = this.props
     const isThresholdRating = rating >= thresholdRating
     const ratingType = getRatingType(rating)
     !isThresholdRating && this.closeFeedback()
     if (rating >= thresholdRating) {
-      setShowDate(0, thresholdRating, nOfDayAboveThsldIfSbmt)
+      setShowDate(0, thresholdRating, 1000)
     } else if (rating >= 1 && rating < thresholdRating) {
       setShowDate(0, thresholdRating, nOfDayBelowThsldIfSbmt)
     } else {
       setShowDate(0, thresholdRating, noOfDays)
     }
-    //setShowDate(rating, thresholdRating, noOfDays)
     isThresholdRating && this.redirectToStore(storeLink)
     this.showThankYouScreen()
     this.props.sendEvent({ type: 'SUBMIT', ratingType, feedback })

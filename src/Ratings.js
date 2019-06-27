@@ -40,8 +40,7 @@ export default class Ratings extends Component {
     
     const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout,
       nOfDayIfNotRated,nOfDayBelowThsldNoSbmt,nOfDayBelowThsldIfSbmt,
-      nOfDayAboveThsldNoSbmt,nOfDayAboveThsldIfSbmt,
-       thresholdRating, title, feedbackPlaceholder } = this.props
+      nOfDayAboveThsldNoSbmt,thresholdRating, title, feedbackPlaceholder } = this.props
     const { showRatingComponent } = this.state
     console.log("atarRender() R showRatingComponent",showRatingComponent)
     if(showRatingComponent === true) {
@@ -56,7 +55,6 @@ export default class Ratings extends Component {
           nOfDayBelowThsldNoSbmt={nOfDayBelowThsldNoSbmt}
           nOfDayBelowThsldIfSbmt={nOfDayBelowThsldIfSbmt}
           nOfDayAboveThsldNoSbmt={nOfDayAboveThsldNoSbmt}
-          nOfDayAboveThsldIfSbmt={nOfDayAboveThsldIfSbmt}
           timeout={thanksScreenTimeout}
           thresholdRating={thresholdRating}
           title={title}
@@ -73,10 +71,9 @@ Ratings.defaultProps = {
   sendEvent: () => {},
   noOfDays: 90,
   nOfDayIfNotRated:3,
-  nOfDayBelowThsldNoSbmt:10,
+  nOfDayBelowThsldNoSbmt:90,
   nOfDayBelowThsldIfSbmt:90,
   nOfDayAboveThsldNoSbmt:7,
-  nOfDayAboveThsldIfSbmt:1000,
   thanksScreenTimeout: 3000,
   onDismiss: () => {},
   onBlur: () => {},
@@ -92,8 +89,7 @@ Ratings.propTypes = {
   noOfDayIfNotRated: PropTypes.number,
   nOfDayBelowThsldNoSbmt: PropTypes.number,
   nOfDayBelowThsldIfSbmt: PropTypes.number,
-  nOfDayAboveThsldIfSbmt: PropTypes.number,
-  nOfDayAboveThsldIfSbmt: PropTypes.number,
+  nOfDayAboveThsldNoSbmt: PropTypes.number,
   thresholdRating: PropTypes.number,
   sendEvent: PropTypes.func,
   onDismiss: PropTypes.func,
