@@ -88,11 +88,11 @@ export default class RatingComponent extends Component {
     const ratingType = getRatingType(rating)
     !isThresholdRating && this.closeFeedback()
     if (rating >= thresholdRating) {
-      setShowDate(0, thresholdRating, 1000)
+      setShowDate(rating, thresholdRating, 1000,true)
     } else if (rating >= 1 && rating < thresholdRating) {
-      setShowDate(0, thresholdRating, nOfDayBelowThsldIfSbmt)
+      setShowDate(rating, thresholdRating, nOfDayBelowThsldIfSbmt,true)
     } else {
-      setShowDate(0, thresholdRating, noOfDays)
+      setShowDate(rating, thresholdRating, noOfDays,true)
     }
     isThresholdRating && this.redirectToStore(storeLink)
     this.showThankYouScreen()
@@ -137,13 +137,13 @@ export default class RatingComponent extends Component {
     !showFeedback && this.onRemindLater()
     showFeedback && this.closeFeedback(this.onRemindLater)
     if (rating >= thresholdRating) {
-      setShowDate(0, thresholdRating, nOfDayAboveThsldNoSbmt)
+      setShowDate(rating, thresholdRating, nOfDayAboveThsldNoSbmt,false)
     } else if (rating >= 1 && rating < thresholdRating) {
-      setShowDate(0, thresholdRating, nOfDayBelowThsldNoSbmt)
+      setShowDate(rating, thresholdRating, nOfDayBelowThsldNoSbmt,false)
     } else if (rating == 0) {
-      setShowDate(0, thresholdRating, nOfDayIfNotRated)
+      setShowDate(rating, thresholdRating, nOfDayIfNotRated,false)
     } else {
-      setShowDate(0, thresholdRating, noOfDays)
+      setShowDate(rating, thresholdRating, noOfDays,false)
     }
   }
 

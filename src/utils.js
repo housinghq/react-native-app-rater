@@ -63,11 +63,14 @@ export const colors = {
   green: '#1fd290',
 }
 
-export function setShowDate(ratings = 0, threshold, noOfDays ) {
+export function setShowDate(ratings = 0, threshold, noOfDays, isSubmitPressed) {
+  let neverShow = false;
   const today = Date.now()
   const nextTime = today + noOfDays*msPerDay
-  const neverShow = ratings >= threshold
-  const showDate = { nextTime,noOfDays, neverShow }
+  if (isSubmitPressed){
+    neverShow = ratings >= threshold
+  }
+  const showDate = { nextTime, neverShow }
   try{
   AsyncStorage.setItem('SHOW_DATE', JSON.stringify(showDate))
   }catch(err){
