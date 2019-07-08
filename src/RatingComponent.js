@@ -131,7 +131,6 @@ export default class RatingComponent extends Component {
 
   onClose = () => {
     const { rating } = this.state
-    console.log("atarOnClose() RC rating", rating)
     const { showFeedback } = this.state
     const { noOfDays, nOfDayIfNotRated, nOfDayBelowThsldNoSbmt,
       nOfDayAboveThsldNoSbmt, thresholdRating } = this.props
@@ -191,8 +190,6 @@ export default class RatingComponent extends Component {
   }
 
   render() {
-    //console.log("atarRender() RC states", this.state)
-    //console.log("atarRender() RC props", this.props)
     const { thanksVisible, rateVisible, rating, showFeedback } = this.state
     const { type, thresholdRating, title, feedbackPlaceholder } = this.props
     const show = rateVisible || thanksVisible

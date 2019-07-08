@@ -17,12 +17,10 @@ export default class Ratings extends Component {
   async shouldShow() {
     const { onBlur } = this.props
     const showDate = await AsyncStorage.getItem('SHOW_DATE')
-    console.log("atarshouldShow() R showDate",showDate)
     if (showDate) {
       const { nextTime, neverShow } = JSON.parse(showDate)
       if (neverShow === false) {
         const currentTime = Date.now()
-        console.log("currentTime",currentTime)
         if (currentTime >= nextTime) {
           this.setState({ showRatingComponent: true })
         } else {
@@ -42,7 +40,6 @@ export default class Ratings extends Component {
       nOfDayIfNotRated,nOfDayBelowThsldNoSbmt,nOfDayBelowThsldIfSbmt,
       nOfDayAboveThsldNoSbmt,thresholdRating, title, feedbackPlaceholder } = this.props
     const { showRatingComponent } = this.state
-    console.log("atarRender() R showRatingComponent",showRatingComponent)
     if(showRatingComponent === true) {
       return (
         <RatingComponent
