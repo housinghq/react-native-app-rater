@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Modal,
   Linking,
-  Platform
+  Platform,
+  NetInfo
 } from 'react-native'
 import PropTypes from 'prop-types'
 import getRatingType, { colors, setShowDate, isNilOrEmpty } from './utils'
@@ -100,14 +101,17 @@ export default class RatingComponent extends Component {
   }
 
   onPress = (feedback = '') => {
-    const { rating } = this.state
-    const { thresholdRating } = this.props
-    if((rating < thresholdRating) && (isNilOrEmpty(feedback) || typeof feedback !== 'string')) {
+    const { rating, showFeedback } = this.state
+    const { thresholdRating, onSubmitFail } = this.props
+    if(!showFeedback && (rating < thresholdRating) && (isNilOrEmpty(feedback) || typeof feedback !== 'string')) {
       this.setState({ showFeedback: true })
     }
     else {
       feedback = (typeof feedback !== 'string') ? '' : feedback
-      this.onSubmit(feedback)
+      NetInfo.isConnected.fetch().then(isConnected => {
+        isConnected && this.onSubmit(feedback)
+        !isConnected && onSubmitFail()
+      })
     }
   }
 
@@ -221,7 +225,7 @@ export default class RatingComponent extends Component {
             <FeedbackView
               onClose={this.closeFeedback}
               onPressLater={this.onClose}
-              onSubmit={this.onSubmit}
+              onSubmit={this.onPress}
               placeholder={feedbackPlaceholder}
             />
           </Modal>
@@ -238,11 +242,13 @@ RatingComponent.defaultProps = {
   noOfDays: 90,
   thresholdRating: 4,
   sendEvent: () => {},
+  onSubmitFail: () => {},
   dismiss: () => {}
 }
 
 RatingComponent.propTypes = {
   dismiss: PropTypes.func,
+  onSubmitFail: PropTypes.func,
   type: PropTypes.number,
   timeout: PropTypes.number,
   noOfDays: PropTypes.number,
