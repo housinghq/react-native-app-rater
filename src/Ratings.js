@@ -38,7 +38,7 @@ export default class Ratings extends Component {
     
     const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout,
       nOfDayIfNotRated,nOfDayBelowThsldNoSbmt,nOfDayBelowThsldIfSbmt,
-      nOfDayAboveThsldNoSbmt,thresholdRating, title, feedbackPlaceholder } = this.props
+      nOfDayAboveThsldNoSbmt,thresholdRating, title, feedbackPlaceholder, onSubmitFail  } = this.props
     const { showRatingComponent } = this.state
     if(showRatingComponent === true) {
       return (
@@ -56,6 +56,7 @@ export default class Ratings extends Component {
           thresholdRating={thresholdRating}
           title={title}
           feedbackPlaceholder={feedbackPlaceholder}
+          onSubmitFail={onSubmitFail}
         />
       )
     }
@@ -74,6 +75,7 @@ Ratings.defaultProps = {
   thanksScreenTimeout: 3000,
   onDismiss: () => {},
   onBlur: () => {},
+  onSubmitFail: () => {},
   thresholdRating: 4,
   title: 'Rate Your Experience With Housing',
   feedbackPlaceholder: 'E.g. I’m not able to access owner or agent contact details'
@@ -91,6 +93,7 @@ Ratings.propTypes = {
   sendEvent: PropTypes.func,
   onDismiss: PropTypes.func,
   onBlur:PropTypes.func,
+  onSubmitFail: PropTypes.func,
   title: PropTypes.string,
   feedbackPlaceholder: PropTypes.string
 }
