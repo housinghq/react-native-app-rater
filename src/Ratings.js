@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage, NativeModules } from 'react-native'
 import PropTypes from 'prop-types'
 import RatingComponent from './RatingComponent'
 
@@ -38,9 +38,11 @@ export default class Ratings extends Component {
     
     const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout,
       nOfDayIfNotRated,nOfDayBelowThsldNoSbmt,nOfDayBelowThsldIfSbmt,
-      nOfDayAboveThsldNoSbmt,thresholdRating, title, feedbackPlaceholder, onSubmitFail  } = this.props
+      nOfDayAboveThsldNoSbmt,thresholdRating, title, feedbackPlaceholder, onSubmitFail, platform  } = this.props
     const { showRatingComponent } = this.state
-    if(showRatingComponent === true) {
+    if (platform === 'ios'){
+      NativeModules.captureIosRating
+    } else if(showRatingComponent === true) {
       return (
         <RatingComponent
           dismiss={this.dismissRatingCard}
