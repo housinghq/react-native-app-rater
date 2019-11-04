@@ -9,7 +9,7 @@
     return dispatch_get_main_queue();
 }
 RCT_EXPORT_MODULE(InAppIosRating)
-RCT_EXPORT_METHOD( getRating ) {
+RCT_EXPORT_METHOD(getRating) {
   if (@available(iOS 10.3, *)) {
         [SKStoreReviewController requestReview];
     }

@@ -38,12 +38,10 @@ export default class Ratings extends Component {
 
     const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout,
       nOfDayIfNotRated, nOfDayBelowThsldNoSbmt, nOfDayBelowThsldIfSbmt,
-      nOfDayAboveThsldNoSbmt, thresholdRating, title, feedbackPlaceholder, onSubmitFail, showIosInApp } = this.props
+      nOfDayAboveThsldNoSbmt, thresholdRating, title, feedbackPlaceholder, onSubmitFail, showIosInAppRater } = this.props
     const { showRatingComponent } = this.state
-    if (showIosInApp) {
-      return (
+    if (showIosInAppRater) {
         NativeModules.InAppIosRating.getRating()
-      )
     } else if (showRatingComponent === true) {
       return (
         <RatingComponent
