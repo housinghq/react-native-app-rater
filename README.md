@@ -22,7 +22,7 @@
 #### Android
 
 1. Open up `android/app/src/main/java/[...]/MainActivity.java`
-  - Add `com.shellmonger.reactnative.RNRateAppPackage;` to the imports at the top of the file
+  - Add `import com.shellmonger.reactnative.RNRateAppPackage;` to the imports at the top of the file
   - Add `new RNRateAppPackage()` to the list returned by the `getPackages()` method
 2. Append the following lines to `android/settings.gradle`:
   	```
@@ -51,4 +51,17 @@ export class RateApp extends Component {
 		/>	
 	}	
 }
+```	  
+## Props and Usage	
+Prop | Description | Type | Default	
+------ | ------ | ------ | ------	
+ **`type`** | Rating Type: either `0`, `1` or `2` - 0 - Not Displayed, 1 - Ratings with Stars, 2 - Ratings with Emojis | number | 0	
+ **`title`** | Title of the Rating Screen to be displayed | string | Rate Your Experience With Housing	
+ **`feedbackPlaceholder`** | Placeholder value to display when feedback screen is opened | string | E.g. I’m not able to access owner or agent contact details 	
+ **`noOfDays`** | Show Ratings next after 'noOfDays' Days | number | 90	
+ **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`	
+ **`thanksScreenTimeout`** | timeout (in ms) after which the Thank You Screen will be closed (automatically) | number | 3000 (3s)	
+ **`onDismiss`** | A function called when Ratings is closed | function | (none)	
+ **`onBlur`** | A function called when Ratings is not displayed (as Days Passed < `noOfDays` or Previously 5 star Ratings were given) | function | (none)	
+ **`sendEvent`** | function to handle GA-Events Call **params** : Object - `keys`: type (required), ratingsType (optional), feedback (optional)| function | (none)
   
