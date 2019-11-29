@@ -8,4 +8,3 @@
 @interface RNReactNativeAppRater : NSObject <RCTBridgeModule>
 
 @end
-  
