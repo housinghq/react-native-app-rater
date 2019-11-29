@@ -1,5 +1,6 @@
 
 #import "RNReactNativeAppRater.h"
+#import <StoreKit/StoreKit.h>
 
 @implementation RNReactNativeAppRater
 
