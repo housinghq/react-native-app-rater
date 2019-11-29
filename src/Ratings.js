@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage, NativeModules } from 'react-native'
 import PropTypes from 'prop-types'
 import RatingComponent from './RatingComponent'
 
@@ -35,12 +35,14 @@ export default class Ratings extends Component {
   }
 
   render() {
-    
+
     const { type, sendEvent, storeLink, noOfDays, thanksScreenTimeout,
-      nOfDayIfNotRated,nOfDayBelowThsldNoSbmt,nOfDayBelowThsldIfSbmt,
-      nOfDayAboveThsldNoSbmt,thresholdRating, title, feedbackPlaceholder, onSubmitFail  } = this.props
+      nOfDayIfNotRated, nOfDayBelowThsldNoSbmt, nOfDayBelowThsldIfSbmt,
+      nOfDayAboveThsldNoSbmt, thresholdRating, title, feedbackPlaceholder, onSubmitFail, showIosInAppRater } = this.props
     const { showRatingComponent } = this.state
-    if(showRatingComponent === true) {
+    if (showIosInAppRater && NativeModules && NativeModules.RNReactNativeAppRater) {
+      NativeModules.RNReactNativeAppRater.getRating()
+    } else if (showRatingComponent === true) {
       return (
         <RatingComponent
           dismiss={this.dismissRatingCard}
@@ -66,16 +68,16 @@ export default class Ratings extends Component {
 
 Ratings.defaultProps = {
   type: 0,
-  sendEvent: () => {},
+  sendEvent: () => { },
   noOfDays: 90,
-  nOfDayIfNotRated:3,
-  nOfDayBelowThsldNoSbmt:90,
-  nOfDayBelowThsldIfSbmt:90,
-  nOfDayAboveThsldNoSbmt:7,
+  nOfDayIfNotRated: 3,
+  nOfDayBelowThsldNoSbmt: 90,
+  nOfDayBelowThsldIfSbmt: 90,
+  nOfDayAboveThsldNoSbmt: 7,
   thanksScreenTimeout: 3000,
-  onDismiss: () => {},
-  onBlur: () => {},
-  onSubmitFail: () => {},
+  onDismiss: () => { },
+  onBlur: () => { },
+  onSubmitFail: () => { },
   thresholdRating: 4,
   title: 'Rate Your Experience With Housing',
   feedbackPlaceholder: 'E.g. I’m not able to access owner or agent contact details'
@@ -92,7 +94,7 @@ Ratings.propTypes = {
   thresholdRating: PropTypes.number,
   sendEvent: PropTypes.func,
   onDismiss: PropTypes.func,
-  onBlur:PropTypes.func,
+  onBlur: PropTypes.func,
   onSubmitFail: PropTypes.func,
   title: PropTypes.string,
   feedbackPlaceholder: PropTypes.string

@@ -47,4 +47,6 @@ buck-out/
 #Native Code
 windows/
 android/
-ios/
+
+#xcworkspace
+ios/RNReactNativeAppRater.xcworkspace/

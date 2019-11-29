@@ -37,32 +37,31 @@
 ## Usage
 ```javascript
 import RNRateApp from '@housing/react-native-app-rater';
-
 const storeLink = Platform.select({	// To redirect users to the respective app store to rate app
   ios: 'App-Store-Link'
-  android: 'Play-Store-Link'
-})
-
-export class RateApp extends Component {
-  render() {
-		<RNRateApp
-			type={2}
-			storeLink={storeLink}
-			noOfDays={7}
-			thanksScreenTimeout={1000}
-		/>
-	}
+  android: 'Play-Store-Link'	
+})	
+export class RateApp extends Component {	
+  render() {	
+		<RNRateApp	
+			type={2}	
+			storeLink={storeLink}	
+			noOfDays={7}	
+			thanksScreenTimeout={1000}	
+		/>	
+	}	
 }
-```
-## Props and Usage
-Prop | Description | Type | Default
------- | ------ | ------ | ------
- **`type`** | Rating Type: either `0`, `1` or `2` - 0 - Not Displayed, 1 - Ratings with Stars, 2 - Ratings with Emojis | number | 0
- **`title`** | Title of the Rating Screen to be displayed | string | Rate Your Experience With Housing
- **`feedbackPlaceholder`** | Placeholder value to display when feedback screen is opened | string | E.g. I’m not able to access owner or agent contact details 
- **`noOfDays`** | Show Ratings next after 'noOfDays' Days | number | 90
- **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`
- **`thanksScreenTimeout`** | timeout (in ms) after which the Thank You Screen will be closed (automatically) | number | 3000 (3s)
- **`onDismiss`** | A function called when Ratings is closed | function | (none)
- **`onBlur`** | A function called when Ratings is not displayed (as Days Passed < `noOfDays` or Previously 5 star Ratings were given) | function | (none)
+```	  
+## Props and Usage	
+Prop | Description | Type | Default	
+------ | ------ | ------ | ------	
+ **`type`** | Rating Type: either `0`, `1` or `2` - 0 - Not Displayed, 1 - Ratings with Stars, 2 - Ratings with Emojis | number | 0	
+ **`title`** | Title of the Rating Screen to be displayed | string | Rate Your Experience With Housing	
+ **`feedbackPlaceholder`** | Placeholder value to display when feedback screen is opened | string | E.g. I’m not able to access owner or agent contact details 	
+ **`noOfDays`** | Show Ratings next after 'noOfDays' Days | number | 90	
+ **`shouldAlwaysShow`** | When true the ratings will always be shown regardless of the noOfDays passed | boolean | `false`	
+ **`thanksScreenTimeout`** | timeout (in ms) after which the Thank You Screen will be closed (automatically) | number | 3000 (3s)	
+ **`onDismiss`** | A function called when Ratings is closed | function | (none)	
+ **`onBlur`** | A function called when Ratings is not displayed (as Days Passed < `noOfDays` or Previously 5 star Ratings were given) | function | (none)	
  **`sendEvent`** | function to handle GA-Events Call **params** : Object - `keys`: type (required), ratingsType (optional), feedback (optional)| function | (none)
+  
