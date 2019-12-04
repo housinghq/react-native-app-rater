@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   Modal,
   Linking,
-  Platform,
-  NetInfo
+  Platform
 } from 'react-native'
+import NetInfo from '@react-native-community/netinfo'
 import PropTypes from 'prop-types'
 import getRatingType, { colors, setShowDate, isNilOrEmpty } from './utils'
 import RatingsDisplay from './RatingsDisplay'

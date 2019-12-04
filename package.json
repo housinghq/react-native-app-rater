@@ -1,6 +1,6 @@
 {
   "name": "@housing/react-native-app-rater",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "## Getting started",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,8 @@
   "author": "Manthan Patel",
   "license": "ISC",
   "peerDependencies": {
-    "react-native": "0.59.2"
+    "react-native": "0.61.0",
+    "@react-native-community/netinfo": "4.1.4"
   },
   "repository": {
     "type": "git",
