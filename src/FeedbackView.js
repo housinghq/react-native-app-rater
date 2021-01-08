@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { View, ScrollView, TextInput, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import BottomView from './BottomView'
-import { isNilOrEmpty, closeImg, colors } from './utils'
+import { isNilOrEmpty, closeImg, colors, scaleWidth } from './utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: '500',
+    width: '100%',
     fontSize: 18,
     color: colors.grey,
     textAlign: 'center',
@@ -39,10 +40,11 @@ const styles = StyleSheet.create({
     marginTop: 45,
     marginHorizontal: 16,
     height: 140,
-    width: 325,
+    width:  scaleWidth(325),
     fontSize: 16,
     paddingTop: 10,
-    paddingLeft: 15, 
+    paddingLeft: 15,
+    paddingRight: 5,
     borderStyle: 'solid',
     borderRadius: 4,
     borderWidth: 1,
@@ -71,7 +73,7 @@ export default class FeedbackView extends PureComponent {
   onChangeText = (text) => this.setState({ feedback: text })
 
   renderTitle = (title) => (
-    <Text style={styles.title}>
+    <Text allowFontScaling={false} style={styles.title}>
       {title}
     </Text>
   )
@@ -115,7 +117,7 @@ export default class FeedbackView extends PureComponent {
         contentInset={{ bottom: 25 }}
       >
         {this.renderCloseButton(onClose)}
-        <View style = {{ flex: 1, alignItems: 'center' }}>
+        <View style = {{ flex: 1, alignItems: 'center', width: '100%' }}>
           {this.renderTitle('What went wrong?')}
           {this.renderTextInput(placeholder)}
           {this.renderBottomView(onPressLater)}

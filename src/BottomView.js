@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colors.white,
+    width: '100%',
     fontSize: 16,
     fontWeight: '500',
     textAlign: 'center'
@@ -41,7 +42,7 @@ export default class BottomView extends Component {
     const color = isDisabled ? colors.black10 : colors.green
     return (
       <TouchableOpacity style={[styles.button, { backgroundColor: color }]} disabled={isDisabled} onPress={onPress}>
-        <Text style={styles.buttonText}>{buttonText}</Text>
+        <Text allowFontScaling={false} style={styles.buttonText}>{buttonText}</Text>
       </TouchableOpacity>
     )
   }
@@ -49,7 +50,7 @@ export default class BottomView extends Component {
   renderRemindLater = (onPress) => (
     <View style={{flex: 1, justifyContent:'center', alignContent:'center'}}>
       <TouchableOpacity onPress={onPress}>
-        <Text style={styles.later}>Later</Text>
+        <Text allowFontScaling={false} style={styles.later}>Later</Text>
       </TouchableOpacity>
     </View>
   )

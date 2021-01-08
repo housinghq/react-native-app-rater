@@ -6,10 +6,18 @@ import equals from 'ramda/src/equals'
 import always from 'ramda/src/always'
 import clamp from 'ramda/src/clamp'
 export const isNilOrEmpty = anyPass([isNil, isEmpty])
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage, Dimensions } from 'react-native'
+
+const guidelineBaseWidth = 360
+
+export const DEVICE_WIDTH = Dimensions.get('window').width
 
 const msPerDay = 24*60*60*1000
 export const imageLabels = ['Awful', 'Poor', 'Average', 'Good', 'Great']
+
+export function scaleWidth(width) {
+  return width * DEVICE_WIDTH / guidelineBaseWidth
+}
 
 export const emojis = [
   {
