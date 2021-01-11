@@ -1,21 +1,19 @@
 import React, { Component } from 'react'
 import { View, Image, FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import PropTypes from 'prop-types'
-import { imageLabels, emojis, stars } from './utils'
+import { imageLabels, emojis, stars, DEVICE_WIDTH } from './utils'
 
 const defaultOpacity = 0.7
 const styles = StyleSheet.create({
   containerView: {
-    flex: 1,
+    // equal width for all 5 after subtracting margins
+    width: (DEVICE_WIDTH - 40) / 5,
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center'
   },
   flatlistContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: 20,
-    marginRight: 20
+    marginHorizontal: 20
   },
   starThumbnail: {
     height: 22,
@@ -27,6 +25,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
+    width: '100%',
+    textAlign: 'center',
     color: '#000000',
     opacity: defaultOpacity
   }
@@ -52,19 +52,19 @@ export default class RatingsCard extends Component {
       (selectedId !== null && (index === selectedId) ? emojis[index].selected : emojis[index].unselected)
 
     return (
-      <View style={styles.containerView}>
-        <TouchableOpacity onPress={() => this.changeRatings(index)}>
+      <TouchableOpacity activeOpacity={1} onPress={() => this.changeRatings(index)} style={styles.containerView}>
+        <View>
           { type === 1 && (
             <Image style={styles.starThumbnail} source={rateIcon} />
           )}
           { type === 2 && (
             <Image style={styles.emojiThumbnail} opacity={emojiOpacity} source={rateIcon} />
           )}
-        </TouchableOpacity>
-        { type === 2 && (
-          <Text style={[styles.label, { opacity: emojiOpacity, fontWeight: fontWeight }]}>{imageLabels[index]}</Text>
+        </View>
+        {type === 2 && (
+          <Text allowFontScaling={false} style={[styles.label, { opacity: emojiOpacity, fontWeight: fontWeight }]}>{imageLabels[index]}</Text>
         )}
-      </View>
+      </TouchableOpacity>
     )
   }
 
@@ -73,9 +73,10 @@ export default class RatingsCard extends Component {
       <View style={{ width: '100%', marginTop: 16, marginBottom: 16 }}>
         <FlatList
           data={[1, 2, 3, 4, 5]}
+          horizontal
           extraData={this.state.selectedId}
           scrollEnabled={false}
-          contentContainerStyle={[styles.flatlistContainer]}
+          contentContainerStyle={styles.flatlistContainer}
           keyExtractor={(item, index) => index.toString()}
           renderItem={this.renderItem}
         />

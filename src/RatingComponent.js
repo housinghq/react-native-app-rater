@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import NetInfo from '@react-native-community/netinfo'
 import PropTypes from 'prop-types'
-import getRatingType, { colors, setShowDate, isNilOrEmpty } from './utils'
+import getRatingType, { colors, setShowDate, isNilOrEmpty, scaleWidth } from './utils'
 import RatingsDisplay from './RatingsDisplay'
 import FeedbackView from './FeedbackView'
 import BottomView from './BottomView'
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   thanksView: {
     height: 70,
-    width: 260,
+    width: scaleWidth(260),
     borderRadius: 2,
     backgroundColor: colors.white,
     justifyContent: 'center',
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '500',
+    width: '100%',
     textAlign: 'center',
     flexWrap: 'wrap',
     color: colors.grey,
@@ -159,13 +160,13 @@ export default class RatingComponent extends Component {
   renderThankYouScreen = () => (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
       <View style={styles.thanksView}>
-        <Text style={styles.thanksText}>Thank You for your feedback!</Text>
+        <Text allowFontScaling={false} style={styles.thanksText}>Thank You for your feedback!</Text>
       </View>
     </View>
   )
 
   renderTitle = (title) => (
-    <Text style={styles.title}>{title}</Text>
+    <Text allowFontScaling={false} style={styles.title}>{title}</Text>
   )
 
   renderRatings = (type) => (
